@@ -14,6 +14,22 @@ CREATE TABLE "Password" (
 );
 
 -- CreateTable
+CREATE TABLE "Song" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "tutorialLink" TEXT,
+    "songLink" TEXT,
+    "spotifyLink" TEXT,
+    "stepSheetLink" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "createdById" TEXT NOT NULL,
+    "updatedById" TEXT NOT NULL,
+    CONSTRAINT "Song_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Song_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "Note" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,

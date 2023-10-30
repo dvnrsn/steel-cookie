@@ -14,8 +14,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password Password?
-  notes    Note[]
+  password     Password?
+  notes        Note[]
+  createdSongs Song[]    @relation(name: "CreatedBy")
+  updatedSongs Song[]    @relation(name: "UpdatedBy")
 }
 
 model Password {
@@ -23,6 +25,24 @@ model Password {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
+}
+
+model Song {
+  id            String  @id @default(cuid())
+  name          String
+  tutorialLink  String?
+  songLink      String?
+  spotifyLink   String?
+  stepSheetLink String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdBy   User   @relation(name: "CreatedBy", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdById String
+
+  updatedBy   User   @relation(name: "UpdatedBy", fields: [updatedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  updatedById String
 }
 
 model Note {

@@ -1,8 +1,10 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
+import { Authenticator } from "remix-auth";
 
 import type { User } from "~/models/user.server";
 import { getUserById } from "~/models/user.server";
+import { FacebookStrategy, SocialsProvider } from "remix-auth-socials";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -95,3 +97,26 @@ export async function logout(request: Request) {
     },
   });
 }
+
+// Social Auth (Facebook)
+
+export let authenticator = new Authenticator(sessionStorage, {
+  sessionKey: "_session",
+});
+
+const getCallback = (provider: SocialsProvider) => {
+  return `http://localhost:3000/auth/${provider}/callback`;
+};
+
+authenticator.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID || "",
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
+      callbackURL: getCallback(SocialsProvider.FACEBOOK),
+    },
+    async ({ profile }) => {
+      console.log(profile);
+    },
+  ),
+);

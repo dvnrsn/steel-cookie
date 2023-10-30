@@ -4,7 +4,7 @@ A Remix site to track the active and not so active line dances at [The Westerner
 
 inspired by [Max's Iron Cookie](https://www.ironcookie.com)
 
-## What's in the stack
+## What's in the [stack](https://github.com/remix-run/indie-stack)
 
 - [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/)
 - Production-ready [SQLite Database](https://sqlite.org)
@@ -19,7 +19,6 @@ inspired by [Max's Iron Cookie](https://www.ironcookie.com)
 - Code formatting with [Prettier](https://prettier.io)
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
-
 
 ## Development
 

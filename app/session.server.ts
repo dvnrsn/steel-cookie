@@ -1,6 +1,10 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import { Authenticator } from "remix-auth";
-import { FacebookStrategy, SocialsProvider } from "remix-auth-socials";
+import {
+  FacebookProfile,
+  FacebookStrategy,
+  SocialsProvider,
+} from "remix-auth-socials";
 import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
@@ -40,7 +44,27 @@ export async function getUserId(
 
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
-  if (userId === undefined) return null;
+  if (userId === undefined) {
+    const socialUser = (await authenticator.isAuthenticated(
+      request,
+    )) as FacebookProfile;
+    if (socialUser) {
+      const user = await verifySocialLogin(
+        SocialsProvider.FACEBOOK,
+        socialUser.id,
+      );
+      if (!user) {
+        throw Error("User not found, despite being authenticated?");
+      }
+      return createUserSession({
+        request,
+        userId: user.id,
+        remember: false,
+        redirectTo: request.url,
+      });
+    }
+    return null;
+  }
 
   const user = await getUserById(userId);
   if (user) return user;

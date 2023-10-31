@@ -5,6 +5,7 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import { SocialsProvider } from "remix-auth-socials";
 import { useEffect, useRef } from "react";
 
 import { verifyLogin } from "~/models/user.server";
@@ -173,6 +174,15 @@ export default function LoginPage() {
               </Link>
             </div>
           </div>
+        </Form>
+        <Form
+          action={`/auth/${SocialsProvider.FACEBOOK}`}
+          method="post"
+          className="mt-8"
+        >
+          <button className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
+            Login with Facebook
+          </button>
         </Form>
       </div>
     </div>

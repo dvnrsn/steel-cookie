@@ -1,9 +1,12 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 
-import { logout } from "~/session.server";
+import { authenticator, logout } from "~/session.server";
 
-export const action = async ({ request }: ActionFunctionArgs) =>
+export const action = async ({ request }: ActionFunctionArgs) => {
   logout(request);
+  // TODO
+  // authenticator.logout(request, { redirectTo: "/" });
+};
 
 export const loader = async () => redirect("/");

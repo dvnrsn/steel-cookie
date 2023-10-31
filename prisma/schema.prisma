@@ -34,7 +34,7 @@ model Password {
 
 model Song {
   id            String  @id @default(cuid())
-  name          String
+  title         String
   tutorialLink  String?
   songLink      String?
   spotifyLink   String?

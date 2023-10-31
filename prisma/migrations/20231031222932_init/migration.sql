@@ -20,7 +20,7 @@ CREATE TABLE "Password" (
 -- CreateTable
 CREATE TABLE "Song" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "tutorialLink" TEXT,
     "songLink" TEXT,
     "spotifyLink" TEXT,

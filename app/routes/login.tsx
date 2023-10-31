@@ -5,8 +5,8 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
-import { SocialsProvider } from "remix-auth-socials";
 import { useEffect, useRef } from "react";
+import { SocialsProvider } from "remix-auth-socials";
 
 import { verifyLogin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";

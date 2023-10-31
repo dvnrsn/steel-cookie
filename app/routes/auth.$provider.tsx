@@ -1,10 +1,10 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
+
 import { authenticator } from "~/session.server";
 
-export let loader = () => redirect("/");
+export const loader = () => redirect("/");
 
-export let action = ({ request, params }: ActionFunctionArgs) => {
-  console.log("here");
+export const action = ({ request, params }: ActionFunctionArgs) => {
   if (typeof params.provider !== "string") {
     throw new Error("Expected 'provider' to be a string");
   }

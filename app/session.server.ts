@@ -1,10 +1,14 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import invariant from "tiny-invariant";
 import { Authenticator } from "remix-auth";
+import { FacebookStrategy, SocialsProvider } from "remix-auth-socials";
+import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
-import { getUserById } from "~/models/user.server";
-import { FacebookStrategy, SocialsProvider } from "remix-auth-socials";
+import {
+  createSocialUser,
+  getUserById,
+  verifySocialLogin,
+} from "~/models/user.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -100,7 +104,7 @@ export async function logout(request: Request) {
 
 // Social Auth (Facebook)
 
-export let authenticator = new Authenticator(sessionStorage, {
+export const authenticator = new Authenticator(sessionStorage, {
   sessionKey: "_session",
 });
 
@@ -111,12 +115,22 @@ const getCallback = (provider: SocialsProvider) => {
 authenticator.use(
   new FacebookStrategy(
     {
-      clientID: process.env.FACEBOOK_CLIENT_ID || "",
+      clientID: process.env.FACEBOOK_APP_ID || "",
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
       callbackURL: getCallback(SocialsProvider.FACEBOOK),
     },
     async ({ profile }) => {
-      console.log(profile);
+      let user = await verifySocialLogin(SocialsProvider.FACEBOOK, profile.id);
+      if (!user) {
+        user = await createSocialUser({
+          socialId: profile._json.id,
+          authProvider: SocialsProvider.FACEBOOK,
+          email: profile._json.email,
+          firstName: profile._json.first_name,
+          lastName: profile._json.last_name,
+        });
+      }
+      return profile;
     },
   ),
 );

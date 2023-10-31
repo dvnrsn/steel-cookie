@@ -10,6 +10,7 @@ export async function getUserById(id: User["id"]) {
 }
 
 export async function getUserByEmail(email: User["email"]) {
+  if (!email) return null;
   return prisma.user.findUnique({ where: { email } });
 }
 
@@ -28,7 +29,34 @@ export async function createUser(email: User["email"], password: string) {
   });
 }
 
+interface CreateUserParams {
+  authProvider: User["authProvider"];
+  socialId: User["socialId"];
+  email: User["email"];
+  firstName: User["firstName"];
+  lastName: User["lastName"];
+}
+
+export async function createSocialUser({
+  authProvider,
+  socialId,
+  email,
+  firstName,
+  lastName,
+}: CreateUserParams) {
+  return prisma.user.create({
+    data: {
+      authProvider,
+      socialId,
+      email,
+      firstName,
+      lastName,
+    },
+  });
+}
+
 export async function deleteUserByEmail(email: User["email"]) {
+  if (!email) return null;
   return prisma.user.delete({ where: { email } });
 }
 
@@ -36,6 +64,7 @@ export async function verifyLogin(
   email: User["email"],
   password: Password["hash"],
 ) {
+  if (!email) return null;
   const userWithPassword = await prisma.user.findUnique({
     where: { email },
     include: {
@@ -60,4 +89,21 @@ export async function verifyLogin(
   const { password: _password, ...userWithoutPassword } = userWithPassword;
 
   return userWithoutPassword;
+}
+
+export async function verifySocialLogin(
+  authProvider: User["authProvider"],
+  socialId: User["socialId"],
+) {
+  if (!socialId) {
+    return null;
+  }
+  const user = await prisma.user.findUnique({
+    where: { socialId },
+  });
+
+  if (user?.authProvider !== authProvider) {
+    return null;
+  }
+  return user;
 }

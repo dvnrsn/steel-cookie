@@ -8,8 +8,13 @@ generator client {
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
+  id           String  @id @default(cuid())
+  email        String? @unique
+  firstName    String?
+  lastName     String?
+  // not enum yet because SQLite connector doesn't support enum
+  authProvider String? // @default("EMAIL")
+  socialId     String? @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

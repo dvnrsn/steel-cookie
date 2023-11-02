@@ -25,6 +25,7 @@
     "/public/build"
   ],
   "dependencies": {
+    "@ariakit/react": "^0.3.5",
     "@prisma/client": "^4.16.2",
     "@remix-run/css-bundle": "^2.1.0",
     "@remix-run/node": "^2.1.0",

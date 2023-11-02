@@ -83,6 +83,11 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
+      - name: pnpm-setup
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: 🏄 Copy test env vars
         run: cp .env.example .env
 
@@ -101,9 +106,6 @@ jobs:
 
       - name: ⚙️ Build
         run: npm run build
-
-      - name: Install pnpm
-        run: npm install -g pnpm
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v6

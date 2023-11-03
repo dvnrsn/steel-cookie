@@ -3,8 +3,18 @@
 @tailwind utilities;
 
 .page-container {
-  width: clamp(500px, 65%, 1000px);
-  max-width: 100%;
-  margin: 0 auto;
-  padding-top: 40px;
+  margin: 0 24px;
+}
+
+@media (min-width: 640px) {
+  .page-container {
+    width: clamp(500px, 65%, 1000px);
+    max-width: 100%;
+    margin: 0 auto;
+    padding-top: 40px;
+  }
+}
+
+a {
+  color: hsl(218.5, 79.2%, 36.1%);
 }

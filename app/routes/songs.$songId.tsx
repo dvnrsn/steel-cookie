@@ -93,15 +93,19 @@ export default function NoteDetailsPage() {
 
         {user ? (
           <>
-            <p className="mt-4">
-              Added By: {song.createdBy?.firstName}{" "}
-              {new Date(song.createdAt).toLocaleDateString()}
-            </p>
+            {song?.createdAt ? (
+              <p className="mt-4">
+                Added By: {song.createdBy?.firstName}{" "}
+                {new Date(song.createdAt).toLocaleDateString()}
+              </p>
+            ) : null}
 
-            <p>
-              Updated By: {song.updatedBy?.firstName}{" "}
-              {new Date(song.updatedAt).toLocaleDateString()}
-            </p>
+            {song?.updatedAt ? (
+              <p>
+                Updated By: {song.updatedBy?.firstName}{" "}
+                {new Date(song?.updatedAt).toLocaleDateString()}
+              </p>
+            ) : null}
           </>
         ) : null}
       </div>

@@ -46,6 +46,7 @@ model Song {
   danceCounts           Int?
   wallCounts            Int?
   startingWeightFoot    String?
+  isAdmin               Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

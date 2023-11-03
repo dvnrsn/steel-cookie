@@ -33,12 +33,19 @@ model Password {
 }
 
 model Song {
-  id            String  @id @default(cuid())
-  title         String
-  tutorialLink  String?
-  songLink      String?
-  spotifyLink   String?
-  stepSheetLink String?
+  id          String  @id @default(cuid())
+  title       String
+  artist      String
+  songLink    String?
+  spotifyLink String?
+
+  danceName             String?
+  danceChoreographer    String?
+  danceInstructionsLink String?
+  stepSheetLink         String?
+  danceCounts           Int?
+  wallCounts            Int?
+  startingWeightFoot    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

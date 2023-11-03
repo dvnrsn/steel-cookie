@@ -9,8 +9,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const search = url.searchParams.get("search") ?? "";
 
-  const noteListItems = await getSongListItems({ search });
-  return json({ noteListItems });
+  const songListItems = await getSongListItems({ search });
+  return json({ songListItems });
 };
 
 export default function NotesPage() {
@@ -41,28 +41,48 @@ export default function NotesPage() {
           + New Song
         </Link>
       </div>
-      <table className="w-full">
+      <table className="w-full text-left">
         <thead>
           <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th className="p-2 border-gray-500 border-solid border-b-2">
+              Title
+            </th>
+            <th className="p-2 border-gray-500 border-solid border-b-2">
+              Artist
+            </th>
+            <th className="p-2 border-gray-500 border-solid border-b-2">
+              Dance Name
+            </th>
+            <th className="p-2 border-gray-500 border-solid border-b-2">
+              Choreographer
+            </th>
+            <th className="p-2 border-gray-500 border-solid border-b-2"></th>
+            <th className="p-2 border-gray-500 border-solid border-b-2"></th>
+            <th className="p-2 border-gray-500 border-solid border-b-2"></th>
           </tr>
         </thead>
         <tbody>
-          {data.noteListItems.map((song) => (
+          {data.songListItems.map((song) => (
             <tr key={song.id}>
-              <td className="p-2 border-black-200 border-solid border-b-2">
+              <td className="p-2 border-gray-200 border-solid border-b-2">
                 {song.title}
               </td>
-              <td className="p-2 border-black-200 border-solid border-b-2">
+              <td className="p-2 border-gray-200 border-solid border-b-2">
+                {song.artist}
+              </td>
+              <td className="p-2 border-gray-200 border-solid border-b-2">
+                {song.danceName}
+              </td>
+              <td className="p-2 border-gray-200 border-solid border-b-2">
+                {song.danceChoreographer}
+              </td>
+              <td className="p-2 border-gray-200 border-solid border-b-2">
                 <Link to={`${song.songLink}`}>song</Link>
               </td>
-              <td className="p-2 border-black-200 border-solid border-b-2">
-                <Link to={`${song.tutorialLink}`}>tutorial</Link>
+              <td className="p-2 border-gray-200 border-solid border-b-2">
+                <Link to={`${song.danceInstructionsLink}`}>tutorial</Link>
               </td>
-              <td className="p-2 border-black-200 border-solid border-b-2">
+              <td className="p-2 border-gray-200 border-solid border-b-2">
                 <Link to={`${song.spotifyLink}`}>
                   <img
                     alt="spotify"

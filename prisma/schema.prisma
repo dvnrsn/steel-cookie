@@ -15,6 +15,7 @@ model User {
   // not enum yet because SQLite connector doesn't support enum
   authProvider String? // @default("EMAIL")
   socialId     String? @unique
+  isAdmin      Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -46,7 +47,6 @@ model Song {
   danceCounts           Int?
   wallCounts            Int?
   startingWeightFoot    String?
-  isAdmin               Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

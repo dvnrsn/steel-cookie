@@ -6,6 +6,7 @@ CREATE TABLE "User" (
     "lastName" TEXT,
     "authProvider" TEXT,
     "socialId" TEXT,
+    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -31,7 +32,6 @@ CREATE TABLE "Song" (
     "danceCounts" INTEGER,
     "wallCounts" INTEGER,
     "startingWeightFoot" TEXT,
-    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     "createdById" TEXT NOT NULL,

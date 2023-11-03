@@ -3,7 +3,7 @@ import { Link, Outlet } from "@remix-run/react";
 
 import { useOptionalUser } from "~/utils";
 
-export default function NotesPage() {
+export default function SongsPage() {
   const user = useOptionalUser();
 
   return (

@@ -1,7 +1,52 @@
+import { Song, User } from "@prisma/client";
 import { UploadHandlerPart } from "@remix-run/node";
 import Papa from "papaparse";
 
 import { prisma } from "~/db.server";
+
+export function getSong({
+  id,
+  userId,
+}: Pick<Song, "id"> & { userId?: User["id"] }) {
+  const select = {
+    id: true,
+    title: true,
+    artist: true,
+    songLink: true,
+    spotifyLink: true,
+
+    danceName: true,
+    danceChoreographer: true,
+    danceInstructionsLink: true,
+    stepSheetLink: true,
+    danceCounts: true,
+    wallCounts: true,
+    startingWeightFoot: true,
+
+    ...(userId
+      ? {
+          createdAt: true,
+          updatedAt: true,
+
+          createdBy: true,
+          createdById: true,
+
+          updatedBy: true,
+          updatedById: true,
+        }
+      : {}),
+  };
+  return prisma.song.findFirst({
+    select,
+    where: { id },
+  });
+}
+
+export function deleteSong({ id }: Pick<Song, "id">) {
+  return prisma.note.deleteMany({
+    where: { id },
+  });
+}
 
 export function getSongListItems({ search }: { search: string }) {
   const where = search ? { title: { contains: search } } : {};

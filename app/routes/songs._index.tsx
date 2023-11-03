@@ -56,16 +56,15 @@ export default function NotesPage() {
             <th className="p-2 border-gray-500 border-solid border-b-2">
               Choreographer
             </th>
-            <th className="p-2 border-gray-500 border-solid border-b-2"></th>
-            <th className="p-2 border-gray-500 border-solid border-b-2"></th>
-            <th className="p-2 border-gray-500 border-solid border-b-2"></th>
           </tr>
         </thead>
         <tbody>
           {data.songListItems.map((song) => (
             <tr key={song.id}>
               <td className="p-2 border-gray-200 border-solid border-b-2">
-                {song.title}
+                <Link key={song.id} to={`${song.id}`}>
+                  {song.title}
+                </Link>
               </td>
               <td className="p-2 border-gray-200 border-solid border-b-2">
                 {song.artist}
@@ -75,21 +74,6 @@ export default function NotesPage() {
               </td>
               <td className="p-2 border-gray-200 border-solid border-b-2">
                 {song.danceChoreographer}
-              </td>
-              <td className="p-2 border-gray-200 border-solid border-b-2">
-                <Link to={`${song.songLink}`}>song</Link>
-              </td>
-              <td className="p-2 border-gray-200 border-solid border-b-2">
-                <Link to={`${song.danceInstructionsLink}`}>tutorial</Link>
-              </td>
-              <td className="p-2 border-gray-200 border-solid border-b-2">
-                <Link to={`${song.spotifyLink}`}>
-                  <img
-                    alt="spotify"
-                    src="https://1000logos.net/wp-content/uploads/2017/08/Spotify-Logo.png"
-                    className="max-h-6"
-                  />
-                </Link>
               </td>
             </tr>
           ))}

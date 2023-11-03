@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { useState } from "react";
 
+import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -37,11 +38,12 @@ export default function NotesPage() {
             name="search"
           />
         </Form>
-        <Link to="new" className="block p-2">
+        <Link to="new" className="p-2 hidden md:block">
           + New Song
         </Link>
       </div>
-      <table className="w-full text-left">
+      <MobileSongList songListItems={data.songListItems} />
+      <table className="w-full text-left hidden md:block">
         <thead>
           <tr>
             <th className="p-2 border-gray-500 border-solid border-b-2">

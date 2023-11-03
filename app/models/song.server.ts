@@ -54,13 +54,9 @@ export function getSongListItems({ search }: { search: string }) {
     select: {
       id: true,
       title: true,
-      danceInstructionsLink: true,
       danceChoreographer: true,
       danceName: true,
-      songLink: true,
       artist: true,
-      spotifyLink: true,
-      stepSheetLink: true,
     },
     where,
     orderBy: { updatedAt: "desc" },

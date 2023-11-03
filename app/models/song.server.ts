@@ -1,3 +1,4 @@
+import { UploadHandlerPart } from "@remix-run/node";
 import Papa from "papaparse";
 
 import { prisma } from "~/db.server";
@@ -21,20 +22,24 @@ export function getSongListItems({ search }: { search: string }) {
   });
 }
 
-export async function uploadCSV(file, userId: string) {
+export async function uploadCSV(file: UploadHandlerPart, userId: string) {
   const chunks = [];
   for await (const chunk of file.data) {
     chunks.push(chunk); // Assuming these are Buffers or Uint8Arrays
   }
   const combinedChunks = Buffer.concat(chunks);
   const csvString = combinedChunks.toString("utf8");
-  const res = Papa.parse(csvString);
+  interface Parsed {
+    data: string[][];
+  }
+  const res = Papa.parse(csvString) as unknown as Parsed;
 
-  async function createSongsFromCSV(csvData: any) {
+  async function createSongsFromCSV(csvData: string[][]) {
     // Loop over the CSV data and create song entries
     for (const row of csvData) {
       const [
-        id,
+        ,
+        // first element is ID of ironcookie song
         title,
         artist,
         songLink,

@@ -133,7 +133,7 @@ export const authenticator = new Authenticator(sessionStorage, {
 });
 
 const getCallback = (provider: SocialsProvider) => {
-  return `${process.env.HOST}/auth/${provider}/callback`;
+  return `${process.env.FACEBOOK_CALLBACK_URL}/auth/${provider}/callback`;
 };
 
 authenticator.use(

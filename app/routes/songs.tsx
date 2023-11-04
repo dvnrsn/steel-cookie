@@ -1,5 +1,5 @@
 import * as Ariakit from "@ariakit/react";
-import { Link, Outlet } from "@remix-run/react";
+import { Form, Link, Outlet } from "@remix-run/react";
 
 import { useOptionalUser } from "~/utils";
 
@@ -8,8 +8,8 @@ export default function SongsPage() {
 
   return (
     <div className="page-container">
-      {user ? (
-        <div className="w-full">
+      <div className="w-full flex">
+        {user ? (
           <Ariakit.MenuProvider>
             <Ariakit.MenuButton className="flex items-center ml-auto">
               {user.firstName || user.email}
@@ -21,17 +21,19 @@ export default function SongsPage() {
               </Ariakit.MenuItem>
               <Ariakit.MenuItem
                 render={
-                  <Link className="w-full block" to="/logo">
-                    Logout
-                  </Link>
+                  <Form action="/logout" method="post">
+                    <button type="submit">Logout</button>
+                  </Form>
                 }
               ></Ariakit.MenuItem>
             </Ariakit.Menu>
           </Ariakit.MenuProvider>
-        </div>
-      ) : (
-        <Link to="/login">Login</Link>
-      )}
+        ) : (
+          <Link className="ml-auto" to="/login">
+            Login
+          </Link>
+        )}
+      </div>
 
       <Outlet />
     </div>

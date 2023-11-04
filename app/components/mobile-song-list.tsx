@@ -10,7 +10,7 @@ export default function MobileSongList({
   >[];
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col md:hidden">
       {songListItems.map((song) => (
         <Link
           to={`${song.id}`}

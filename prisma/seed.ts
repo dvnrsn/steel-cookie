@@ -11,34 +11,20 @@ async function seed() {
     // no worries if it doesn't exist yet
   });
 
-  const hashedPassword = await bcrypt.hash("racheliscool", 10);
-
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: {
-        create: {
-          hash: hashedPassword,
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (user == null && process.env.ADMIN_PASS) {
+    await prisma.user.create({
+      data: {
+        email: process.env.ADMIN_EMAIL,
+        password: {
+          create: {
+            hash: await bcrypt.hash(process.env.ADMIN_PASS, 10),
+          },
         },
+        isAdmin: true,
       },
-    },
-  });
-
-  await prisma.note.create({
-    data: {
-      title: "My first note",
-      body: "Hello, world!",
-      userId: user.id,
-    },
-  });
-
-  await prisma.note.create({
-    data: {
-      title: "My second note",
-      body: "Hello, world!",
-      userId: user.id,
-    },
-  });
+    });
+  }
 
   console.log(`Database has been seeded. 🌱`);
 }

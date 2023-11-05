@@ -8,6 +8,12 @@ dependencies:
   '@ariakit/react':
     specifier: ^0.3.5
     version: 0.3.5(react-dom@18.2.0)(react@18.2.0)
+  '@conform-to/react':
+    specifier: ^0.9.0
+    version: 0.9.0(react@18.2.0)
+  '@conform-to/zod':
+    specifier: ^0.9.0
+    version: 0.9.0(@conform-to/dom@0.9.0)(zod@3.22.4)
   '@prisma/client':
     specifier: ^4.16.2
     version: 4.16.2(prisma@4.16.2)
@@ -50,6 +56,9 @@ dependencies:
   tiny-invariant:
     specifier: ^1.3.1
     version: 1.3.1
+  zod:
+    specifier: ^3.22.4
+    version: 3.22.4
 
 devDependencies:
   '@faker-js/faker':
@@ -603,6 +612,29 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@conform-to/dom@0.9.0:
+    resolution: {integrity: sha512-kaYP7jKeWWnBY+M0+Rttj5atWm9Tt9Uyts49lU4hoz9p/X8v5GuGas6YOilovyE5/vJUsnuYzN97upxIvlYg4g==}
+    dev: false
+
+  /@conform-to/react@0.9.0(react@18.2.0):
+    resolution: {integrity: sha512-ZxfzK+L4b3Z9SPGCyo8GqLjfSFDp4upiwpjJHxDLPwMDVsF8EvkifSHyzUkjaiIny407qN9zbdtoItQCTaaZeg==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      '@conform-to/dom': 0.9.0
+      react: 18.2.0
+    dev: false
+
+  /@conform-to/zod@0.9.0(@conform-to/dom@0.9.0)(zod@3.22.4):
+    resolution: {integrity: sha512-Eq19/U6inDlCB1GNrvfTJBxyRVFesHVgkB5piWqLmhRYFHL8ooQGvmhVaOqeqqm+e+zNCjsIe3jip5ZW7uiBIw==}
+    peerDependencies:
+      '@conform-to/dom': 0.9.0
+      zod: ^3.21.0
+    dependencies:
+      '@conform-to/dom': 0.9.0
+      zod: 3.22.4
+    dev: false
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -8966,6 +8998,10 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

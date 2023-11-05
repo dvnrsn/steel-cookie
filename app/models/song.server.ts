@@ -42,6 +42,33 @@ export function getSong({
   });
 }
 
+type NullableSongFields = {
+  [K in keyof Omit<
+    Song,
+    | "createdById"
+    | "createdAt"
+    | "updatedById"
+    | "updatedAt"
+    | "title"
+    | "artist"
+    | "id"
+  >]?: Song[K] | null;
+};
+type RequiredSongField = Pick<
+  Song,
+  "title" | "artist" | "updatedAt" | "updatedById"
+>;
+
+export function editSong(
+  songId: Song["id"],
+  songData: NullableSongFields & RequiredSongField,
+) {
+  return prisma.song.update({
+    where: { id: songId },
+    data: { ...songData },
+  });
+}
+
 export function deleteSong({ id }: Pick<Song, "id">) {
   return prisma.note.deleteMany({
     where: { id },

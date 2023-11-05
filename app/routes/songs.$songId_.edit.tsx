@@ -1,9 +1,46 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { z } from "zod";
 
-import { getSong } from "~/models/song.server";
-import { getUserId } from "~/session.server";
+import { editSong, getSong } from "~/models/song.server";
+import { getUserId, requireUserId } from "~/session.server";
+
+const schema = z.object({
+  title: z.string().min(1),
+  artist: z.string().min(1),
+  songLink: z.string().nullable().optional(),
+  spotifyLink: z.string().optional(),
+  danceName: z.string().optional(),
+  danceInstructionsLink: z.string().optional(),
+  danceChoreographer: z.string().optional(),
+  stepSheetLink: z.string().optional(),
+  danceCounts: z.coerce.number().optional(),
+  wallCounts: z.coerce.number().optional(),
+  startingWeightFoot: z.string().optional(),
+});
+
+export const action = async ({ request, params }: LoaderFunctionArgs) => {
+  invariant(params.songId, "songId not found");
+  const userId = await requireUserId(request);
+  const formData = await request.formData();
+
+  const payload = Object.fromEntries(formData);
+  const result = schema.safeParse(payload);
+
+  if (!result.success) {
+    return json({
+      payload,
+      error: result.error.flatten().fieldErrors,
+    });
+  }
+  const song = await editSong(params.songId, {
+    ...result.data,
+    updatedById: userId,
+    updatedAt: new Date(),
+  });
+  return redirect("/songs/" + song.id);
+};
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.songId, "songId not found");
@@ -23,25 +60,25 @@ export default function SongEditPage() {
     <Form method="post">
       <h3 className="text-2xl font-bold">Edit Song Details</h3>
 
-      <label className="block mt-4" htmlFor="songTitle">
+      <label className="block mt-4" htmlFor="title">
         Song Title
       </label>
       <input
         className="px-2 py-1 w-full md:w-auto"
         type="text"
-        id="songTitle"
-        name="songTitle"
+        id="title"
+        name="title"
         defaultValue={song.title}
       />
 
-      <label className="block mt-4" htmlFor="songArtist">
+      <label className="block mt-4" htmlFor="artist">
         Artist
       </label>
       <input
         className="px-2 py-1 w-full md:w-auto"
         type="text"
-        id="songArtist"
-        name="songArtist"
+        id="artist"
+        name="artist"
         defaultValue={song.artist}
       />
 

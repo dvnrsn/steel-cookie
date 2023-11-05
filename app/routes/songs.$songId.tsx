@@ -42,12 +42,14 @@ export default function NoteDetailsPage() {
       <Link to=".." className="block p-2 md:absolute md:-translate-x-14">
         <BsArrowLeft size={24} />
       </Link>
-      <Link
-        to="edit"
-        className="block right-0 p-2 md:absolute md:translate-x-14"
-      >
-        <BsPencil size={24} />
-      </Link>
+      {user?.isAdmin ? (
+        <Link
+          to="edit"
+          className="block right-0 p-2 md:absolute md:translate-x-14"
+        >
+          <BsPencil size={24} />
+        </Link>
+      ) : null}
       <h3 className="text-2xl font-bold">{song.title}</h3>
       <div>
         <h1>

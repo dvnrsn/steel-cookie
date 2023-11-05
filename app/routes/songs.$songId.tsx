@@ -7,7 +7,7 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
-import { BsArrowLeft } from "react-icons/bs";
+import { BsArrowLeft, BsPencil } from "react-icons/bs";
 import invariant from "tiny-invariant";
 
 import { deleteSong, getSong } from "~/models/song.server";
@@ -38,9 +38,15 @@ export default function NoteDetailsPage() {
   const user = useOptionalUser();
 
   return (
-    <div className="relative">
+    <div className="relative w-max">
       <Link to=".." className="block p-2 md:absolute md:-translate-x-14">
         <BsArrowLeft size={24} />
+      </Link>
+      <Link
+        to="edit"
+        className="block right-0 p-2 md:absolute md:translate-x-14"
+      >
+        <BsPencil size={24} />
       </Link>
       <h3 className="text-2xl font-bold">{song.title}</h3>
       <div>
@@ -95,15 +101,25 @@ export default function NoteDetailsPage() {
           <>
             {song?.createdAt ? (
               <p className="mt-4">
-                Added By: {song.createdBy?.firstName}{" "}
-                {new Date(song.createdAt).toLocaleDateString()}
+                Added By: {song.createdBy?.firstName || song.createdBy?.email}
+                {" - "}
+                {new Date(song.createdAt).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
               </p>
             ) : null}
 
             {song?.updatedAt ? (
               <p>
-                Updated By: {song.updatedBy?.firstName}{" "}
-                {new Date(song?.updatedAt).toLocaleDateString()}
+                Updated By: {song.updatedBy?.firstName || song.updatedBy?.email}
+                {" - "}
+                {new Date(song?.updatedAt).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
               </p>
             ) : null}
           </>

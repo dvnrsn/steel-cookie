@@ -33,7 +33,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   return redirect("/songs");
 };
 
-export default function NoteDetailsPage() {
+export default function SongDetailsPage() {
   const { song } = useLoaderData<typeof loader>();
   const user = useOptionalUser();
 

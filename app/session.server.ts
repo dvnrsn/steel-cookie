@@ -93,6 +93,15 @@ export async function requireUser(request: Request) {
   throw await logout(request);
 }
 
+export async function requireAdmin(request: Request) {
+  const userId = await requireUserId(request);
+  const user = await getUserById(userId);
+  if (user?.isAdmin) {
+    return user;
+  }
+  throw await logout(request);
+}
+
 export async function createUserSession({
   request,
   userId,

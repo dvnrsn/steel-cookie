@@ -1,10 +1,10 @@
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
 import { editSong, getSong } from "~/models/song.server";
-import { getUserId, requireUserId } from "~/session.server";
+import { requireAdmin, requireUserId } from "~/session.server";
 
 const schema = z.object({
   title: z.string().min(1),
@@ -44,9 +44,9 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.songId, "songId not found");
-  const userId = await getUserId(request);
+  const user = await requireAdmin(request);
 
-  const song = await getSong({ id: params.songId, userId });
+  const song = await getSong({ id: params.songId, userId: user.id });
   if (!song) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -55,9 +55,12 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function SongEditPage() {
   const data = useLoaderData<typeof loader>();
+  const result = useActionData<typeof action>();
+
   const { song } = data;
   return (
     <Form method="post">
+      {JSON.stringify(result?.error)}
       <h3 className="text-2xl font-bold">Edit Song Details</h3>
 
       <label className="block mt-4" htmlFor="title">

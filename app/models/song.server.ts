@@ -75,8 +75,18 @@ export function deleteSong({ id }: Pick<Song, "id">) {
   });
 }
 
-export function getSongListItems({ search }: { search: string }) {
-  const where = search ? { title: { contains: search } } : {};
+export function getSongListItems({ q }: { q: string }) {
+  const where = q
+    ? {
+        OR: [
+          { title: { contains: q } },
+          { artist: { contains: q } },
+
+          { danceName: { contains: q } },
+          { danceChoreographer: { contains: q } },
+        ],
+      }
+    : {};
   return prisma.song.findMany({
     select: {
       id: true,

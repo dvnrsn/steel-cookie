@@ -4,13 +4,15 @@
 
 .page-container {
   margin: 0 24px;
+  padding: 12px 0;
 }
 
 @media (min-width: 640px) {
   .page-container {
     width: clamp(500px, 65%, 1000px);
     max-width: 100%;
-    margin: 40px auto;
+    margin: 0 auto;
+    padding: 40px 0;
   }
 }
 

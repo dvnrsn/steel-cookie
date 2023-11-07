@@ -25,11 +25,6 @@ export const sessionStorage = createCookieSessionStorage({
   },
 });
 
-export async function getSession(request: Request) {
-  const cookie = request.headers.get("Cookie");
-  return sessionStorage.getSession(cookie);
-}
-
 export async function getUserId(
   request: Request,
 ): Promise<User["id"] | undefined> {

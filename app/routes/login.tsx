@@ -3,13 +3,13 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { SocialsProvider } from "remix-auth-socials";
 
 import { verifyLogin } from "~/models/user.server";
-import { authenticator } from "~/session.server";
+import { authenticator, sessionStorage } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -22,6 +22,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
+  const remember = formData.get("remember");
+
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
 
   if (!validateEmail(email)) {
@@ -45,20 +47,31 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  const user = await verifyLogin(email, password);
+  const userVerified = await verifyLogin(email, password);
 
-  if (!user) {
+  if (!userVerified) {
     return json(
       { errors: { email: "Invalid email or password", password: null } },
       { status: 400 },
     );
   }
 
-  return await authenticator.authenticate("user-pass", request, {
-    successRedirect: redirectTo,
+  const user = await authenticator.authenticate("user-pass", request, {
     failureRedirect: "/join",
     context: { formData },
   });
+
+  const session = await sessionStorage.getSession(
+    request.headers.get("Cookie"),
+  );
+
+  session.set(authenticator.sessionKey, user);
+  const headers = new Headers({
+    "Set-Cookie": await sessionStorage.commitSession(session, {
+      maxAge: remember ? 30 * 24 * 60 * 60 : undefined,
+    }),
+  });
+  return redirect(redirectTo, { headers });
 };
 
 export const meta: MetaFunction = () => [{ title: "Login" }];

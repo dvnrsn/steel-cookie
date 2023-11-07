@@ -3,19 +3,19 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { SocialsProvider } from "remix-auth-socials";
 
 import { verifyLogin } from "~/models/user.server";
-import { createUserSession, getUserId } from "~/session.server";
+import { authenticator } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
-  return json({});
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/",
+  });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -23,7 +23,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const email = formData.get("email");
   const password = formData.get("password");
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
-  const remember = formData.get("remember");
 
   if (!validateEmail(email)) {
     return json(
@@ -55,11 +54,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  return createUserSession({
-    redirectTo,
-    remember: remember === "on" ? true : false,
-    request,
-    userId: user.id,
+  return await authenticator.authenticate("user-pass", request, {
+    successRedirect: redirectTo,
+    failureRedirect: "/join",
+    context: { formData },
   });
 };
 

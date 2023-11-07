@@ -50,6 +50,9 @@ dependencies:
   remix-auth:
     specifier: ^3.6.0
     version: 3.6.0(@remix-run/react@2.2.0)(@remix-run/server-runtime@2.2.0)
+  remix-auth-form:
+    specifier: ^1.4.0
+    version: 1.4.0(@remix-run/server-runtime@2.2.0)(remix-auth@3.6.0)
   remix-auth-socials:
     specifier: ^2.0.5
     version: 2.0.5(@remix-run/react@2.2.0)(@remix-run/server-runtime@2.2.0)
@@ -7278,6 +7281,16 @@ packages:
       remix-auth-oauth2: 1.11.0(@remix-run/server-runtime@2.2.0)(remix-auth@3.6.0)
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /remix-auth-form@1.4.0(@remix-run/server-runtime@2.2.0)(remix-auth@3.6.0):
+    resolution: {integrity: sha512-PirsVtv2AbJ7Lg+OjE+rjlW9AnkNYmqfmNIqTg0Mh1wur22ls5hxf2icVXVCRRhpcpV+FyoDxh03LtIyRj646A==}
+    peerDependencies:
+      '@remix-run/server-runtime': ^1.0.0 || ^2.0.0
+      remix-auth: ^3.6.0
+    dependencies:
+      '@remix-run/server-runtime': 2.2.0(typescript@5.2.2)
+      remix-auth: 3.6.0(@remix-run/react@2.2.0)(@remix-run/server-runtime@2.2.0)
     dev: false
 
   /remix-auth-github@1.6.0(@remix-run/server-runtime@2.2.0)(remix-auth@3.6.0):

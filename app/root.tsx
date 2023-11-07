@@ -10,8 +10,9 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import { getUser } from "~/session.server";
 import stylesheet from "~/tailwind.css";
+
+import { authenticator } from "./session.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -19,7 +20,7 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ user: await getUser(request) });
+  return json({ user: await authenticator.isAuthenticated(request) });
 };
 
 export default function App() {

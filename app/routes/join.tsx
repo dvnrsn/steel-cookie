@@ -3,18 +3,18 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 
-import { createUser, getUserByEmail } from "~/models/user.server";
-import { createUserSession, getUserId } from "~/session.server";
+import { getUserByEmail } from "~/models/user.server";
+import { authenticator } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
-  return json({});
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/",
+  });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -57,13 +57,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  const user = await createUser(email, password);
-
-  return createUserSession({
-    redirectTo,
-    remember: false,
-    request,
-    userId: user.id,
+  return await authenticator.authenticate("user-pass", request, {
+    successRedirect: redirectTo,
+    failureRedirect: "/join",
+    context: { formData },
   });
 };
 

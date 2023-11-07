@@ -1,23 +1,29 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect } from "react";
 
 import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
-  const search = url.searchParams.get("search") ?? "";
+  const q = url.searchParams.get("q") ?? "";
 
-  const songListItems = await getSongListItems({ search });
-  return json({ songListItems });
+  const songListItems = await getSongListItems({ q });
+  return json({ songListItems, q });
 };
 
 export default function NotesPage() {
-  const data = useLoaderData<typeof loader>();
-  const [search, setSearch] = useState("");
+  const { q, songListItems } = useLoaderData<typeof loader>();
   const submit = useSubmit();
+
+  useEffect(() => {
+    const searchField = document.querySelector("input[name=q]");
+    if (searchField instanceof HTMLInputElement) {
+      searchField.value = q || "";
+    }
+  }, [q]);
 
   return (
     <>
@@ -28,21 +34,19 @@ export default function NotesPage() {
           }}
         >
           <input
-            value={search}
-            onChange={(event) => {
-              setSearch(event.target.value);
-            }}
+            aria-label="Search songs"
+            defaultValue={q || ""}
             type="search"
             className="p-2"
             placeholder="Search"
-            name="search"
+            name="q"
           />
         </Form>
         <Link to="new" className="p-2 hidden md:block">
           + New Song
         </Link>
       </div>
-      <MobileSongList songListItems={data.songListItems} />
+      <MobileSongList songListItems={songListItems} />
       <table className="w-full text-left hidden md:block">
         <thead>
           <tr>
@@ -61,7 +65,7 @@ export default function NotesPage() {
           </tr>
         </thead>
         <tbody>
-          {data.songListItems.map((song) => (
+          {songListItems.map((song) => (
             <tr key={song.id}>
               <td className="p-2 border-gray-200 border-solid border-b-2">
                 <Link key={song.id} to={`${song.id}`}>

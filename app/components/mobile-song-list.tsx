@@ -10,15 +10,17 @@ export default function MobileSongList({
   >[];
 }) {
   return (
-    <div className="flex flex-col md:hidden">
-      {songListItems.map((song) => (
+    <div className="flex flex-col md:hidden mt-4">
+      {songListItems.map((song, index) => (
         <Link
           to={`${song.id}`}
           key={song.id}
-          className="flex flex-col border-b-2 border-gray-200"
+          className={`flex flex-col border-gray-200 ${
+            index !== songListItems.length - 1 ? "border-b-2" : ""
+          }`}
         >
-          <div className="flex flex-col">
-            <div className="text-lg font-bold">{song.title}</div>
+          <div className="flex flex-col h-16 justify-center">
+            <div className="text-lg font-bold truncate">{song.title}</div>
             <div className="text-sm">{song.artist}</div>
           </div>
         </Link>

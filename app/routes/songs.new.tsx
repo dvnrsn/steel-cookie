@@ -1,9 +1,8 @@
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
+import { Form, useActionData } from "@remix-run/react";
 import { z } from "zod";
 
-import { editSong, getSong } from "~/models/song.server";
+import { createSong } from "~/models/song.server";
 import { requireAdmin } from "~/session.server";
 
 const schema = z.object({
@@ -20,8 +19,7 @@ const schema = z.object({
   startingWeightFoot: z.string().optional(),
 });
 
-export const action = async ({ request, params }: LoaderFunctionArgs) => {
-  invariant(params.songId, "songId not found");
+export const action = async ({ request }: LoaderFunctionArgs) => {
   const user = await requireAdmin(request);
   const formData = await request.formData();
 
@@ -34,51 +32,38 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
       error: result.error.flatten().fieldErrors,
     });
   }
-  const song = await editSong(params.songId, user.id, result.data);
+  const song = await createSong(user.id, {
+    ...result.data,
+  });
   return redirect("/songs/" + song.id);
 };
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  invariant(params.songId, "songId not found");
-  const user = await requireAdmin(request);
-
-  const song = await getSong({ id: params.songId, userId: user.id });
-  if (!song) {
-    throw new Response("Not Found", { status: 404 });
-  }
-  return json({ song });
-};
-
-export default function SongEditPage() {
-  const data = useLoaderData<typeof loader>();
+export default function SongCreatePage() {
   const result = useActionData<typeof action>();
 
-  const { song } = data;
   return (
     <Form method="post">
       {JSON.stringify(result?.error)}
-      <h3 className="text-2xl font-bold">Edit Song Details</h3>
+      <h3 className="text-2xl font-bold">Create Song</h3>
 
       <label className="block mt-4" htmlFor="title">
-        Song Title
+        Song Title *
       </label>
       <input
         className="px-2 py-1 w-full md:w-auto"
         type="text"
         id="title"
         name="title"
-        defaultValue={song.title}
       />
 
       <label className="block mt-4" htmlFor="artist">
-        Artist
+        Artist *
       </label>
       <input
         className="px-2 py-1 w-full md:w-auto"
         type="text"
         id="artist"
         name="artist"
-        defaultValue={song.artist}
       />
 
       <label className="block mt-4" htmlFor="songLink">
@@ -89,7 +74,6 @@ export default function SongEditPage() {
         type="url"
         id="songLink"
         name="songLink"
-        defaultValue={song.songLink || ""}
       />
 
       <label className="block mt-4" htmlFor="spotifyLink">
@@ -100,7 +84,6 @@ export default function SongEditPage() {
         type="url"
         id="spotifyLink"
         name="spotifyLink"
-        defaultValue={song.spotifyLink || ""}
       />
 
       <label className="block mt-4" htmlFor="danceName">
@@ -111,7 +94,6 @@ export default function SongEditPage() {
         type="text"
         id="danceName"
         name="danceName"
-        defaultValue={song.danceName || ""}
       />
 
       <label className="block mt-4" htmlFor="danceInstructionsLink">
@@ -122,7 +104,6 @@ export default function SongEditPage() {
         type="url"
         id="danceInstructionsLink"
         name="danceInstructionsLink"
-        defaultValue={song.danceInstructionsLink || ""}
       />
 
       <label className="block mt-4" htmlFor="danceChoreographer">
@@ -133,7 +114,6 @@ export default function SongEditPage() {
         type="text"
         id="danceChoreographer"
         name="danceChoreographer"
-        defaultValue={song.danceChoreographer || ""}
       />
 
       <label className="block mt-4" htmlFor="stepSheetLink">
@@ -144,7 +124,6 @@ export default function SongEditPage() {
         type="url"
         id="stepSheetLink"
         name="stepSheetLink"
-        defaultValue={song.stepSheetLink || ""}
       />
 
       <label className="block mt-4" htmlFor="danceCounts">
@@ -155,7 +134,6 @@ export default function SongEditPage() {
         type="text"
         id="danceCounts"
         name="danceCounts"
-        defaultValue={song.danceCounts || ""}
       />
 
       <label className="block mt-4" htmlFor="wallCounts">
@@ -166,7 +144,6 @@ export default function SongEditPage() {
         type="text"
         id="wallCounts"
         name="wallCounts"
-        defaultValue={song.wallCounts || ""}
       />
 
       <label className="block mt-4" htmlFor="startingWeightFoot">
@@ -177,7 +154,6 @@ export default function SongEditPage() {
         type="text"
         id="startingWeightFoot"
         name="startingWeightFoot"
-        defaultValue={song.startingWeightFoot || ""}
       />
 
       <button

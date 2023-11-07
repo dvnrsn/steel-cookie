@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
+import { useOptionalUser } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -17,6 +18,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function NotesPage() {
   const { q, songListItems } = useLoaderData<typeof loader>();
   const submit = useSubmit();
+  const user = useOptionalUser();
 
   useEffect(() => {
     const searchField = document.querySelector("input[name=q]");
@@ -42,9 +44,11 @@ export default function NotesPage() {
             name="q"
           />
         </Form>
-        <Link to="new" className="p-2 hidden md:block">
-          + New Song
-        </Link>
+        {user?.isAdmin ? (
+          <Link to="new" className="p-2 hidden md:block">
+            + New Song
+          </Link>
+        ) : null}
       </div>
       <MobileSongList songListItems={songListItems} />
       <table className="w-full text-left hidden md:block">

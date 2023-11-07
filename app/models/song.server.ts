@@ -54,18 +54,31 @@ type NullableSongFields = {
     | "id"
   >]?: Song[K] | null;
 };
-type RequiredSongField = Pick<
-  Song,
-  "title" | "artist" | "updatedAt" | "updatedById"
->;
+type RequiredSongField = Pick<Song, "title" | "artist">;
 
 export function editSong(
   songId: Song["id"],
+  userId: User["id"],
   songData: NullableSongFields & RequiredSongField,
 ) {
   return prisma.song.update({
     where: { id: songId },
-    data: { ...songData },
+    data: { ...songData, updatedAt: new Date(), updatedById: userId },
+  });
+}
+
+export function createSong(
+  userId: User["id"],
+  songData: NullableSongFields & RequiredSongField,
+) {
+  return prisma.song.create({
+    data: {
+      ...songData,
+      createdById: userId,
+      createdAt: new Date(),
+      updatedById: userId,
+      updatedAt: new Date(),
+    },
   });
 }
 

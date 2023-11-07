@@ -1,5 +1,6 @@
 import type { Password, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import invariant from "tiny-invariant";
 
 import { prisma } from "~/db.server";
 
@@ -17,6 +18,29 @@ export async function getUserByEmail(email: User["email"]) {
 export async function createUser(email: User["email"], password: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  return prisma.user.create({
+    data: {
+      email,
+      password: {
+        create: {
+          hash: hashedPassword,
+        },
+      },
+    },
+  });
+}
+
+export async function findOrCreateUser(
+  email: User["email"],
+  password?: string,
+) {
+  invariant(email, "Email is required");
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (user) {
+    return user;
+  }
+  invariant(password, "Password is required");
+  const hashedPassword = await bcrypt.hash(password, 10);
   return prisma.user.create({
     data: {
       email,

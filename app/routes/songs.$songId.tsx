@@ -11,13 +11,13 @@ import { BsArrowLeft, BsPencil } from "react-icons/bs";
 import invariant from "tiny-invariant";
 
 import { deleteSong, getSong } from "~/models/song.server";
-import { getUserId, requireUserId } from "~/session.server";
+import { authenticator, requireUserId } from "~/session.server";
 import { useOptionalUser } from "~/utils";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.songId, "songId not found");
-  const userId = await getUserId(request);
-  const song = await getSong({ id: params.songId, userId });
+  const user = await authenticator.isAuthenticated(request);
+  const song = await getSong({ id: params.songId, userId: user?.id });
   if (!song) {
     throw new Response("Not Found", { status: 404 });
   }

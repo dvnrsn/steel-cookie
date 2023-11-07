@@ -1,15 +1,13 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import { Authenticator } from "remix-auth";
-import {
-  FacebookProfile,
-  FacebookStrategy,
-  SocialsProvider,
-} from "remix-auth-socials";
+import { FormStrategy } from "remix-auth-form";
+import { FacebookStrategy, SocialsProvider } from "remix-auth-socials";
 import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
 import {
   createSocialUser,
+  findOrCreateUser,
   getUserById,
   verifySocialLogin,
 } from "~/models/user.server";
@@ -27,61 +25,23 @@ export const sessionStorage = createCookieSessionStorage({
   },
 });
 
-const USER_SESSION_KEY = "userId";
-
-export async function getSession(request: Request) {
-  const cookie = request.headers.get("Cookie");
-  return sessionStorage.getSession(cookie);
-}
-
 export async function getUserId(
   request: Request,
 ): Promise<User["id"] | undefined> {
-  const session = await getSession(request);
-  const userId = session.get(USER_SESSION_KEY);
-  return userId;
-}
-
-export async function getUser(request: Request) {
-  const userId = await getUserId(request);
-  if (userId === undefined) {
-    const socialUser = (await authenticator.isAuthenticated(
-      request,
-    )) as FacebookProfile;
-    if (socialUser) {
-      const user = await verifySocialLogin(
-        SocialsProvider.FACEBOOK,
-        socialUser.id,
-      );
-      if (!user) {
-        throw Error("User not found, despite being authenticated?");
-      }
-      return createUserSession({
-        request,
-        userId: user.id,
-        remember: false,
-        redirectTo: request.url,
-      });
-    }
-    return null;
-  }
-
-  const user = await getUserById(userId);
-  if (user) return user;
-
-  throw await logout(request);
+  const user = await authenticator.isAuthenticated(request);
+  return user?.id;
 }
 
 export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname,
 ) {
-  const userId = await getUserId(request);
-  if (!userId) {
+  const user = await authenticator.isAuthenticated(request);
+  if (!user) {
     const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
     throw redirect(`/login?${searchParams}`);
   }
-  return userId;
+  return user.id;
 }
 
 export async function requireUser(request: Request) {
@@ -102,37 +62,11 @@ export async function requireAdmin(request: Request) {
   throw await logout(request);
 }
 
-export async function createUserSession({
-  request,
-  userId,
-  remember,
-  redirectTo,
-}: {
-  request: Request;
-  userId: string;
-  remember: boolean;
-  redirectTo: string;
-}) {
-  const session = await getSession(request);
-  session.set(USER_SESSION_KEY, userId);
-  return redirect(redirectTo, {
-    headers: {
-      "Set-Cookie": await sessionStorage.commitSession(session, {
-        maxAge: remember
-          ? 60 * 60 * 24 * 7 // 7 days
-          : undefined,
-      }),
-    },
-  });
-}
-
 export async function logout(request: Request) {
   return authenticator.logout(request, { redirectTo: "/" });
 }
 
-// Social Auth (Facebook)
-
-export const authenticator = new Authenticator(sessionStorage, {
+export const authenticator = new Authenticator<User>(sessionStorage, {
   sessionKey: "_session",
 });
 
@@ -158,7 +92,17 @@ authenticator.use(
           lastName: profile._json.last_name,
         });
       }
-      return profile;
+      return user;
     },
   ),
+);
+
+authenticator.use(
+  new FormStrategy(async ({ form }) => {
+    const email = form.get("email") as string; // validation is handled by the actions
+    const password = form.get("password") as string | undefined;
+
+    return findOrCreateUser(email, password);
+  }),
+  "user-pass",
 );

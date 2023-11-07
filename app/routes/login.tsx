@@ -9,21 +9,22 @@ import { useEffect, useRef } from "react";
 import { SocialsProvider } from "remix-auth-socials";
 
 import { verifyLogin } from "~/models/user.server";
-import { createUserSession, getUserId } from "~/session.server";
+import { authenticator, sessionStorage } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
-  return json({});
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/",
+  });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
-  const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
   const remember = formData.get("remember");
+
+  const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
 
   if (!validateEmail(email)) {
     return json(
@@ -46,21 +47,31 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  const user = await verifyLogin(email, password);
+  const userVerified = await verifyLogin(email, password);
 
-  if (!user) {
+  if (!userVerified) {
     return json(
       { errors: { email: "Invalid email or password", password: null } },
       { status: 400 },
     );
   }
 
-  return createUserSession({
-    redirectTo,
-    remember: remember === "on" ? true : false,
-    request,
-    userId: user.id,
+  const user = await authenticator.authenticate("user-pass", request, {
+    failureRedirect: "/join",
+    context: { formData },
   });
+
+  const session = await sessionStorage.getSession(
+    request.headers.get("Cookie"),
+  );
+
+  session.set(authenticator.sessionKey, user);
+  const headers = new Headers({
+    "Set-Cookie": await sessionStorage.commitSession(session, {
+      maxAge: remember ? 30 * 24 * 60 * 60 : undefined,
+    }),
+  });
+  return redirect(redirectTo, { headers });
 };
 
 export const meta: MetaFunction = () => [{ title: "Login" }];

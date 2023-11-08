@@ -6,7 +6,7 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
-import { BsArrowLeft, BsPencil } from "react-icons/bs";
+import { BsArrowLeft, BsPencil, BsYoutube } from "react-icons/bs";
 import invariant from "tiny-invariant";
 
 import { deleteSong, getSong } from "~/models/song.server";
@@ -43,15 +43,19 @@ export default function SongDetailsPage() {
           <Link
             to=".."
             className="block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
+            aria-label="Go back"
           >
             <BsArrowLeft size={24} />
+            <span className="sr-only">Go back</span>
           </Link>
           {user?.isAdmin ? (
             <Link
               to="edit"
               className="block right-0 p-2 md:absolute md:translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
+              aria-label="Edit"
             >
               <BsPencil size={24} />
+              <span className="sr-only">Edit</span>
             </Link>
           ) : null}
         </div>
@@ -63,9 +67,10 @@ export default function SongDetailsPage() {
               href={song.songLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block"
+              className="flex justify-center items-center h-16 my-4 bg-slate-100  dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600"
             >
-              Listen to the Song
+              <span className="text-xl">🎧&nbsp;</span>
+              Song
             </a>
           ) : null}
           {song.spotifyLink ? (
@@ -78,29 +83,35 @@ export default function SongDetailsPage() {
             </a>
           ) : null}
 
-          <h2 className="mt-4">Dance name: {song.danceName}</h2>
           {song.danceInstructionsLink ? (
             <a
               href={song.danceInstructionsLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block"
+              className="flex justify-center items-center my-4 h-16 bg-slate-100  dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600"
             >
-              Dance Instructions
+              <BsYoutube size={24} className="text-red-500" />
+              &nbsp;
+              {song.danceName !== song.title ? song.danceName : ""} Tutorial
             </a>
           ) : null}
-          <p>Choreographer: {song.danceChoreographer}</p>
-
           {song.stepSheetLink ? (
             <a
               href={song.stepSheetLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block"
+              className="flex justify-center items-center my-4 h-16 bg-slate-100  dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600"
             >
-              Step Sheet
+              <img
+                src="https://www.copperknob.co.uk/images/star.png"
+                alt="copper knob star"
+                className="h-6"
+              ></img>
+              &nbsp; Step Sheet
             </a>
           ) : null}
+
+          <p>Choreographer: {song.danceChoreographer}</p>
 
           <p>Dance Counts: {song.danceCounts}</p>
           <p>Wall Counts: {song.wallCounts}</p>

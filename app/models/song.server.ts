@@ -76,8 +76,6 @@ export function createSong(
       ...songData,
       createdById: userId,
       createdAt: new Date(),
-      updatedById: userId,
-      updatedAt: new Date(),
     },
   });
 }

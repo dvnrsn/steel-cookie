@@ -163,7 +163,7 @@ export default function SongCreatePage() {
         className="w-full block md:w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 ml-auto mt-4"
         type="submit"
       >
-        Save Changes
+        Create
       </button>
     </Form>
   );

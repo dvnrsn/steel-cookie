@@ -91,8 +91,7 @@ export default function SongDetailsPage() {
               className="flex justify-center items-center my-4 h-16 bg-slate-100  dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600"
             >
               <BsYoutube size={24} className="text-red-500" />
-              &nbsp;
-              {song.danceName !== song.title ? song.danceName : ""} Tutorial
+              &nbsp; Tutorial
             </a>
           ) : null}
           {song.stepSheetLink ? (

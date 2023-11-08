@@ -38,7 +38,7 @@ export default function SongDetailsPage() {
 
   return (
     <div className="w-full flex justify-center mt-6">
-      <div className="relative w-max flex-col justify-center">
+      <div className="relative w-full md:w-[550px] flex-col justify-center">
         <div className="flex justify-between">
           <Link
             to=".."

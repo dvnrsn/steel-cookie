@@ -36,6 +36,6 @@ input {
   }
   input {
     background: hsl(215.3, 25%, 26.7%);
-    border-color: aliceblue;
+    border: none;
   }
 }

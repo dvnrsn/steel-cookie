@@ -42,14 +42,14 @@ export default function SongDetailsPage() {
         <div className="flex justify-between">
           <Link
             to=".."
-            className="block p-2 md:absolute md:-translate-x-14 hover:bg-slate-200 rounded-lg"
+            className="block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
           >
             <BsArrowLeft size={24} />
           </Link>
           {user?.isAdmin ? (
             <Link
               to="edit"
-              className="block right-0 p-2 md:absolute md:translate-x-14 hover:bg-slate-200 rounded-lg"
+              className="block right-0 p-2 md:absolute md:translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
             >
               <BsPencil size={24} />
             </Link>

@@ -47,7 +47,7 @@ export default function NotesPage() {
         {user?.isAdmin ? (
           <Link
             to="new"
-            className="p-2 hidden md:block dark:hover:bg-slate-600 hover:bg-slate-200 rounded-lg ml-2"
+            className="p-2 hidden md:block dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg ml-2"
           >
             + New Song
           </Link>
@@ -74,18 +74,18 @@ export default function NotesPage() {
         <tbody>
           {songListItems.map((song) => (
             <tr key={song.id}>
-              <td className="p-2 border-gray-200 border-solid border-b-2">
+              <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
                 <Link key={song.id} to={`${song.id}`}>
                   {song.title}
                 </Link>
               </td>
-              <td className="p-2 border-gray-200 border-solid border-b-2">
+              <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
                 {song.artist}
               </td>
-              <td className="p-2 border-gray-200 border-solid border-b-2">
+              <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
                 {song.danceName}
               </td>
-              <td className="p-2 border-gray-200 border-solid border-b-2">
+              <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
                 {song.danceChoreographer}
               </td>
             </tr>

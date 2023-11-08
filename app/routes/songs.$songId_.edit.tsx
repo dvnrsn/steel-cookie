@@ -181,10 +181,16 @@ export default function SongEditPage() {
       />
 
       <button
-        className="w-full block md:w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 ml-auto mt-4"
+        className="block w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 ml-auto mt-4 fixed bottom-10 right-20"
         type="submit"
       >
         Save Changes
+      </button>
+      <button
+        type="submit"
+        className="block mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 focus:bg-red-400"
+      >
+        Delete
       </button>
     </Form>
   );

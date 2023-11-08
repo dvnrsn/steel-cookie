@@ -45,7 +45,10 @@ export default function NotesPage() {
           />
         </Form>
         {user?.isAdmin ? (
-          <Link to="new" className="p-2 hidden md:block">
+          <Link
+            to="new"
+            className="p-2 hidden md:block hover:bg-slate-200 rounded-lg ml-2"
+          >
             + New Song
           </Link>
         ) : null}

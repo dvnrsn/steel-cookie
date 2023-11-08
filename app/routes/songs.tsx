@@ -11,18 +11,29 @@ export default function SongsPage() {
       <div className="w-full flex">
         {user ? (
           <Ariakit.MenuProvider>
-            <Ariakit.MenuButton className="flex items-center ml-auto">
+            <Ariakit.MenuButton className="flex items-center ml-auto h-10 md:h-[revert]">
               {user.firstName || user.email}
               <Ariakit.MenuButtonArrow />
             </Ariakit.MenuButton>
-            <Ariakit.Menu gutter={8}>
-              <Ariakit.MenuItem onClick={() => alert("Edit")}>
+            <Ariakit.Menu
+              gutter={8}
+              className="bg-white z-10 relative p-2 rounded-lg border-slate-100 border shadow-md"
+            >
+              <Ariakit.MenuItem
+                onClick={() => alert("Edit")}
+                className="menu-item"
+              >
                 User Settings
               </Ariakit.MenuItem>
               <Ariakit.MenuItem
                 render={
-                  <Form action="/logout" method="post">
-                    <button type="submit">Logout</button>
+                  <Form action="/logout" method="post" className="rounded">
+                    <button
+                      type="submit"
+                      className="w-full h-full menu-item text-left"
+                    >
+                      Logout
+                    </button>
                   </Form>
                 }
               ></Ariakit.MenuItem>

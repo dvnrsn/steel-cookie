@@ -38,3 +38,13 @@ input {
     border: none;
   }
 }
+
+.menu-item {
+  cursor: pointer;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.menu-item:hover {
+  background: hsl(214.3, 31.8%, 91.4%);
+}

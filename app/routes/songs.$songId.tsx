@@ -1,7 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
-  Form,
   Link,
   isRouteErrorResponse,
   useLoaderData,
@@ -138,17 +137,6 @@ export default function SongDetailsPage() {
             </>
           ) : null}
         </div>
-
-        {user?.isAdmin ? (
-          <Form method="post">
-            <button
-              type="submit"
-              className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-            >
-              Delete
-            </button>
-          </Form>
-        ) : null}
       </div>
     </div>
   );

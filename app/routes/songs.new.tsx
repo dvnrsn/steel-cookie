@@ -134,6 +134,7 @@ export default function SongCreatePage() {
         type="text"
         id="danceCounts"
         name="danceCounts"
+        defaultValue="32"
       />
 
       <label className="block mt-4" htmlFor="wallCounts">
@@ -144,6 +145,7 @@ export default function SongCreatePage() {
         type="text"
         id="wallCounts"
         name="wallCounts"
+        defaultValue="4"
       />
 
       <label className="block mt-4" htmlFor="startingWeightFoot">
@@ -154,6 +156,7 @@ export default function SongCreatePage() {
         type="text"
         id="startingWeightFoot"
         name="startingWeightFoot"
+        defaultValue={"Left"}
       />
 
       <button

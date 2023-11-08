@@ -57,9 +57,7 @@ export default function SongDetailsPage() {
         </div>
         <h3 className="text-2xl font-bold">{song.title}</h3>
         <div>
-          <h1>
-            {song.title} by {song.artist}
-          </h1>
+          <p>{song.artist}</p>
           {song.songLink ? (
             <a
               href={song.songLink}

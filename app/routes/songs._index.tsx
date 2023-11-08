@@ -47,7 +47,7 @@ export default function NotesPage() {
         {user?.isAdmin ? (
           <Link
             to="new"
-            className="p-2 hidden md:block hover:bg-slate-200 rounded-lg ml-2"
+            className="p-2 hidden md:block dark:hover:bg-slate-600 hover:bg-slate-200 rounded-lg ml-2"
           >
             + New Song
           </Link>

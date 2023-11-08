@@ -16,7 +16,9 @@ export default function MobileSongList({
           to={`${song.id}`}
           key={song.id}
           className={`flex flex-col border-gray-200 ${
-            index !== songListItems.length - 1 ? "border-b-2" : ""
+            index !== songListItems.length - 1
+              ? "border-b-2 dark:border-gray-600"
+              : ""
           }`}
         >
           <div className="flex flex-col h-16 justify-center">

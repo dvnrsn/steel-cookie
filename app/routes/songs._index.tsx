@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { useEffect } from "react";
 
+import LoginMenu from "~/components/login-menu";
 import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
 import { useOptionalUser } from "~/utils";
@@ -52,6 +53,9 @@ export default function NotesPage() {
             + New Song
           </Link>
         ) : null}
+        <div className="md:hidden">
+          <LoginMenu />
+        </div>
       </div>
       <MobileSongList songListItems={songListItems} />
       <table className="w-full text-left hidden md:block">

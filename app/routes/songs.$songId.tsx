@@ -37,7 +37,7 @@ export default function SongDetailsPage() {
   const user = useOptionalUser();
 
   return (
-    <div className="w-full flex justify-center mt-6">
+    <div className="w-full flex justify-center md:mt-6">
       <div className="relative w-full md:w-[550px] flex-col justify-center">
         <div className="flex justify-between">
           <Link

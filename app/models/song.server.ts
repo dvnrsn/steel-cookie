@@ -45,13 +45,7 @@ export function getSong({
 type NullableSongFields = {
   [K in keyof Omit<
     Song,
-    | "createdById"
-    | "createdAt"
-    | "updatedById"
-    | "updatedAt"
-    | "title"
-    | "artist"
-    | "id"
+    "createdById" | "createdAt" | "updatedById" | "title" | "artist" | "id"
   >]?: Song[K] | null;
 };
 type RequiredSongField = Pick<Song, "title" | "artist">;
@@ -63,7 +57,7 @@ export function editSong(
 ) {
   return prisma.song.update({
     where: { id: songId },
-    data: { ...songData, updatedAt: new Date(), updatedById: userId },
+    data: { ...songData, updatedById: userId },
   });
 }
 

@@ -135,7 +135,7 @@ export default function SongDetailsPage() {
                 </p>
               ) : null}
 
-              {song?.updatedAt ? (
+              {song?.updatedBy && song?.updatedAt ? (
                 <p>
                   Updated By:{" "}
                   {song.updatedBy?.firstName || song.updatedBy?.email}

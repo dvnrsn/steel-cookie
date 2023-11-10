@@ -25,6 +25,16 @@ input {
   border-radius: 6px;
 }
 
+.menu-item {
+  cursor: pointer;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.menu-item:hover {
+  background: hsl(214.3, 31.8%, 91.4%);
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color: hsl(216, 12.2%, 83.9%);
@@ -37,14 +47,7 @@ input {
     background: hsl(215.3, 25%, 26.7%);
     border: none;
   }
-}
-
-.menu-item {
-  cursor: pointer;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-.menu-item:hover {
-  background: hsl(214.3, 31.8%, 91.4%);
+  .menu-item:hover {
+    background: hsl(214.3, 31.8%, 8.6%);
+  }
 }

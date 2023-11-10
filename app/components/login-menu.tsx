@@ -20,9 +20,9 @@ export default function LoginMenu() {
       </Ariakit.MenuButton>
       <Ariakit.Menu
         gutter={8}
-        className="bg-white z-10 relative p-2 rounded-lg border-slate-100 border shadow-md"
+        className="bg-white dark:bg-slate-800 z-10 relative p-2 rounded-lg border-slate-100 border shadow-md"
       >
-        <Ariakit.Heading className="p-2 text-gray-400 md:hidden">
+        <Ariakit.Heading className="p-2 text-gray-400 dark:text-gray-500 md:hidden">
           {user.firstName || user.email}
         </Ariakit.Heading>
         <Ariakit.MenuItem onClick={() => alert("Edit")} className="menu-item">

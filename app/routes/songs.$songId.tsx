@@ -5,6 +5,7 @@ import {
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
+  useSearchParams,
 } from "@remix-run/react";
 import { BsArrowLeft, BsPencil, BsYoutube } from "react-icons/bs";
 import invariant from "tiny-invariant";
@@ -35,18 +36,19 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 export default function SongDetailsPage() {
   const { song } = useLoaderData<typeof loader>();
   const user = useOptionalUser();
+  const [searchParams] = useSearchParams();
 
   return (
     <div className="w-full flex justify-center md:mt-6">
       <div className="relative w-full md:w-[550px] flex-col justify-center">
         <div className="flex justify-between">
           <Link
-            to=".."
+            to={`..?q=${searchParams.get("q") || ""}`}
             className="block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
-            aria-label="Go back"
+            aria-label="Songs"
           >
             <BsArrowLeft size={24} />
-            <span className="sr-only">Go back</span>
+            <span className="sr-only">Songs</span>
           </Link>
           {user?.isAdmin ? (
             <Link

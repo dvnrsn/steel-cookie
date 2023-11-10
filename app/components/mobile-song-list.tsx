@@ -3,17 +3,19 @@ import { Link } from "@remix-run/react";
 
 export default function MobileSongList({
   songListItems,
+  q,
 }: {
   songListItems: Pick<
     Song,
     "id" | "title" | "artist" | "danceChoreographer" | "danceName"
   >[];
+  q?: string;
 }) {
   return (
     <div className="flex flex-col md:hidden mt-4">
       {songListItems.map((song, index) => (
         <Link
-          to={`${song.id}`}
+          to={`${song.id}?q=${q || ""}`}
           key={song.id}
           className={`flex flex-col border-gray-200 ${
             index !== songListItems.length - 1

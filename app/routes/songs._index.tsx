@@ -53,11 +53,11 @@ export default function NotesPage() {
             + New Song
           </Link>
         ) : null}
-        <div className="md:hidden">
+        <div className="md:hidden flex ml-auto">
           <LoginMenu />
         </div>
       </div>
-      <MobileSongList songListItems={songListItems} />
+      <MobileSongList songListItems={songListItems} q={q} />
       <table className="w-full text-left hidden md:block">
         <thead>
           <tr>
@@ -79,9 +79,7 @@ export default function NotesPage() {
           {songListItems.map((song) => (
             <tr key={song.id}>
               <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
-                <Link key={song.id} to={`${song.id}`}>
-                  {song.title}
-                </Link>
+                <Link to={`${song.id}?q=${q}`}>{song.title}</Link>
               </td>
               <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
                 {song.artist}

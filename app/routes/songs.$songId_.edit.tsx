@@ -34,7 +34,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
       error: result.error.flatten().fieldErrors,
     });
   }
-  const song = await editSong(params.songId, user.id, result.data);
+  const song = await editSong(parseInt(params.songId), user.id, result.data);
   return redirect("/songs/" + song.id);
 };
 
@@ -42,7 +42,9 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.songId, "songId not found");
   const user = await requireAdmin(request);
 
-  const song = await getSong({ id: params.songId, userId: user.id });
+  const id = parseInt(params.songId);
+
+  const song = await getSong({ id, userId: user.id });
   if (!song) {
     throw new Response("Not Found", { status: 404 });
   }

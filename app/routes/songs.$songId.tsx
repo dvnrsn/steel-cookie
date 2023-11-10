@@ -17,7 +17,8 @@ import { useOptionalUser } from "~/utils";
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.songId, "songId not found");
   const user = await authenticator.isAuthenticated(request);
-  const song = await getSong({ id: params.songId, userId: user?.id });
+  const id = parseInt(params.songId);
+  const song = await getSong({ id, userId: user?.id });
   if (!song) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -27,8 +28,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   await requireUserId(request);
   invariant(params.songId, "songId not found");
-
-  await deleteSong({ id: params.songId });
+  const id = parseInt(params.songId);
+  await deleteSong({ id });
 
   return redirect("/songs");
 };

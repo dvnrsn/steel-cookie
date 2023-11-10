@@ -81,7 +81,7 @@ export function createSong(
 }
 
 export function deleteSong({ id }: Pick<Song, "id">) {
-  return prisma.note.deleteMany({
+  return prisma.song.deleteMany({
     where: { id },
   });
 }

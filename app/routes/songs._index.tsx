@@ -79,7 +79,7 @@ export default function NotesPage() {
           {songListItems.map((song) => (
             <tr key={song.id}>
               <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
-                <Link to={`${song.id}?q=${q}`}>{song.title}</Link>
+                <Link to={`${song.id}${q ? `?q=${q}` : ""}`}>{song.title}</Link>
               </td>
               <td className="p-2 border-gray-200 dark:border-gray-600 border-solid border-b-2">
                 {song.artist}

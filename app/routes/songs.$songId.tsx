@@ -44,7 +44,9 @@ export default function SongDetailsPage() {
       <div className="relative w-full md:w-[550px] flex-col justify-center">
         <div className="flex justify-between">
           <Link
-            to={`..?q=${searchParams.get("q") || ""}`}
+            to={`..${
+              searchParams.get("q") ? `?q=${searchParams.get("q")}` : ""
+            }`}
             className="block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
             aria-label="Songs"
           >

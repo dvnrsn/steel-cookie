@@ -15,7 +15,7 @@ export default function MobileSongList({
     <div className="flex flex-col md:hidden mt-4">
       {songListItems.map((song, index) => (
         <Link
-          to={`${song.id}?q=${q || ""}`}
+          to={`${song.id}${q ? `?q=${q}` : ""}`}
           key={song.id}
           className={`flex flex-col border-gray-200 ${
             index !== songListItems.length - 1

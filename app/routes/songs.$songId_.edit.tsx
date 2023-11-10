@@ -57,143 +57,158 @@ export default function SongEditPage() {
 
   const { song } = data;
   return (
-    <Form method="post">
-      {JSON.stringify(result?.error)}
-      <h3 className="text-2xl font-bold">Edit Song Details</h3>
+    <>
+      <Form method="post">
+        {JSON.stringify(result?.error)}
+        <h3 className="text-2xl font-bold">Edit Song Details</h3>
 
-      <label className="block mt-4" htmlFor="title">
-        Song Title
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="title"
-        name="title"
-        defaultValue={song.title}
-      />
+        <label className="block mt-4" htmlFor="title">
+          Song Title
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="text"
+          id="title"
+          name="title"
+          defaultValue={song.title}
+        />
 
-      <label className="block mt-4" htmlFor="artist">
-        Artist
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="artist"
-        name="artist"
-        defaultValue={song.artist}
-      />
+        <label className="block mt-4" htmlFor="artist">
+          Artist
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="text"
+          id="artist"
+          name="artist"
+          defaultValue={song.artist}
+        />
 
-      <label className="block mt-4" htmlFor="songLink">
-        Song Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="songLink"
-        name="songLink"
-        defaultValue={song.songLink || ""}
-      />
+        <label className="block mt-4" htmlFor="songLink">
+          Song Link
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="url"
+          id="songLink"
+          name="songLink"
+          defaultValue={song.songLink || ""}
+        />
 
-      <label className="block mt-4" htmlFor="spotifyLink">
-        Spotify Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="spotifyLink"
-        name="spotifyLink"
-        defaultValue={song.spotifyLink || ""}
-      />
+        <label className="block mt-4" htmlFor="spotifyLink">
+          Spotify Link
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="url"
+          id="spotifyLink"
+          name="spotifyLink"
+          defaultValue={song.spotifyLink || ""}
+        />
 
-      <label className="block mt-4" htmlFor="danceName">
-        Dance Name
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="danceName"
-        name="danceName"
-        defaultValue={song.danceName || ""}
-      />
+        <label className="block mt-4" htmlFor="danceName">
+          Dance Name
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="text"
+          id="danceName"
+          name="danceName"
+          defaultValue={song.danceName || ""}
+        />
 
-      <label className="block mt-4" htmlFor="danceInstructionsLink">
-        Dance Instructions Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="danceInstructionsLink"
-        name="danceInstructionsLink"
-        defaultValue={song.danceInstructionsLink || ""}
-      />
+        <label className="block mt-4" htmlFor="danceInstructionsLink">
+          Dance Instructions Link
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="url"
+          id="danceInstructionsLink"
+          name="danceInstructionsLink"
+          defaultValue={song.danceInstructionsLink || ""}
+        />
 
-      <label className="block mt-4" htmlFor="danceChoreographer">
-        Choreographer
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="danceChoreographer"
-        name="danceChoreographer"
-        defaultValue={song.danceChoreographer || ""}
-      />
+        <label className="block mt-4" htmlFor="danceChoreographer">
+          Choreographer
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="text"
+          id="danceChoreographer"
+          name="danceChoreographer"
+          defaultValue={song.danceChoreographer || ""}
+        />
 
-      <label className="block mt-4" htmlFor="stepSheetLink">
-        Step Sheet Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="stepSheetLink"
-        name="stepSheetLink"
-        defaultValue={song.stepSheetLink || ""}
-      />
+        <label className="block mt-4" htmlFor="stepSheetLink">
+          Step Sheet Link
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="url"
+          id="stepSheetLink"
+          name="stepSheetLink"
+          defaultValue={song.stepSheetLink || ""}
+        />
 
-      <label className="block mt-4" htmlFor="danceCounts">
-        Dance Counts
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="danceCounts"
-        name="danceCounts"
-        defaultValue={song.danceCounts || ""}
-      />
+        <label className="block mt-4" htmlFor="danceCounts">
+          Dance Counts
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="text"
+          id="danceCounts"
+          name="danceCounts"
+          defaultValue={song.danceCounts || ""}
+        />
 
-      <label className="block mt-4" htmlFor="wallCounts">
-        Wall Counts
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="wallCounts"
-        name="wallCounts"
-        defaultValue={song.wallCounts || ""}
-      />
+        <label className="block mt-4" htmlFor="wallCounts">
+          Wall Counts
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="text"
+          id="wallCounts"
+          name="wallCounts"
+          defaultValue={song.wallCounts || ""}
+        />
 
-      <label className="block mt-4" htmlFor="startingWeightFoot">
-        Starting Weight Foot
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="startingWeightFoot"
-        name="startingWeightFoot"
-        defaultValue={song.startingWeightFoot || ""}
-      />
+        <label className="block mt-4" htmlFor="startingWeightFoot">
+          Starting Weight Foot
+        </label>
+        <input
+          className="px-2 py-1 w-full md:w-auto"
+          type="text"
+          id="startingWeightFoot"
+          name="startingWeightFoot"
+          defaultValue={song.startingWeightFoot || ""}
+        />
 
-      <button
-        className="block w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 ml-auto mt-4 fixed bottom-10 right-20"
-        type="submit"
+        <button
+          className="block w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 ml-auto mt-4 fixed bottom-10 right-20"
+          type="submit"
+        >
+          Save Changes
+        </button>
+      </Form>
+      <Form
+        action={`/songs/${song.id}/delete`}
+        method="post"
+        onSubmit={(event) => {
+          const response = confirm(
+            "Are you sure you want to delete this song?",
+          );
+          if (!response) {
+            event.preventDefault();
+          }
+        }}
       >
-        Save Changes
-      </button>
-      <button
-        type="submit"
-        className="block mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 focus:bg-red-400"
-      >
-        Delete
-      </button>
-    </Form>
+        <button
+          type="submit"
+          className="block mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 focus:bg-red-400"
+        >
+          Delete
+        </button>
+      </Form>
+    </>
   );
 }

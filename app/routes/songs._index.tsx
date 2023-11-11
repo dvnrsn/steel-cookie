@@ -58,7 +58,7 @@ export default function NotesPage() {
         </div>
       </div>
       <MobileSongList songListItems={songListItems} q={q} />
-      <table className="w-full text-left hidden md:block">
+      <table className="w-full text-left hidden md:table">
         <thead>
           <tr>
             <th className="p-2 border-gray-500 border-solid border-b-2">

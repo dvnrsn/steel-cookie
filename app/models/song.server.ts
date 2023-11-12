@@ -45,7 +45,13 @@ export function getSong({
 type NullableSongFields = {
   [K in keyof Omit<
     Song,
-    "createdById" | "createdAt" | "updatedById" | "title" | "artist" | "id"
+    | "createdById"
+    | "createdAt"
+    | "updatedById"
+    | "title"
+    | "artist"
+    | "id"
+    | "updatedAt"
   >]?: Song[K] | null;
 };
 type RequiredSongField = Pick<Song, "title" | "artist">;

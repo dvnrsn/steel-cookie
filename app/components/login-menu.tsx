@@ -43,7 +43,7 @@ export default function LoginMenu() {
       </Ariakit.Menu>
     </Ariakit.MenuProvider>
   ) : (
-    <Link className="ml-auto" to="/login">
+    <Link className="h-full flex items-center md:ml-auto" to="/login">
       Login
     </Link>
   );

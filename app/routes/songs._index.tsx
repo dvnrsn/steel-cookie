@@ -24,10 +24,19 @@ export default function NotesPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleClick = () => {
+  const handleSubmit = () => {
+    const formData = new FormData();
+    const searchValue = inputRef.current?.value ?? "";
+    if (searchValue) {
+      formData.append("q", searchValue);
+    }
+    submit(formData);
+  };
+
+  const handleClear = () => {
     if (inputRef.current) {
       inputRef.current.value = "";
-      submit(formRef.current);
+      handleSubmit();
       inputRef.current.focus();
     }
   };
@@ -44,9 +53,7 @@ export default function NotesPage() {
       <div className="flex">
         <Form
           ref={formRef}
-          onChange={(event) => {
-            submit(event.currentTarget);
-          }}
+          onChange={handleSubmit}
           className="search-form flex relative border border-gray-600 rounded-md"
         >
           <input
@@ -59,11 +66,12 @@ export default function NotesPage() {
             name="q"
           />
           <button
+            type="button"
             aria-label="clear"
             className={`p-2 md:p-1 md:m-1 ${
               !inputRef.current?.value ? "invisible" : ""
             }`}
-            onClick={handleClick}
+            onClick={handleClear}
           >
             <MdOutlineClear
               size={24}

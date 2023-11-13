@@ -6,7 +6,9 @@ A Remix site to track the active and not so active line dances at [The Westerner
 
 inspired by [Max's Iron Cookie](https://www.ironcookie.com)
 
-## What's in the [stack](https://github.com/remix-run/indie-stack)
+Built on the [indie stack](https://github.com/remix-run/indie-stack)
+
+## What's in the stack?
 
 - [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/)
 - Production-ready [SQLite Database](https://sqlite.org)
@@ -111,6 +113,7 @@ Now that everything is set up you can commit and push your changes to your repo.
 ### Connecting to your database
 
 The sqlite database lives at `/data/sqlite.db` in your deployed application. You can connect to the live database by running `fly ssh console -C database-cli`.
+qc
 
 ### Getting Help with Deployment
 

@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ songListItems, q });
 };
 
-export default function NotesPage() {
+export default function SongsPage() {
   const { q, songListItems } = useLoaderData<typeof loader>();
   const submit = useSubmit();
   const user = useOptionalUser();
@@ -68,9 +68,7 @@ export default function NotesPage() {
           <button
             type="button"
             aria-label="clear"
-            className={`p-2 md:p-1 md:m-1 ${
-              !inputRef.current?.value ? "invisible" : ""
-            }`}
+            className={`p-2 md:p-1 md:m-1 ${q ? "" : "invisible"}`}
             onClick={handleClear}
           >
             <MdOutlineClear

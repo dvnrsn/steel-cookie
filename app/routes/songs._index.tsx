@@ -1,7 +1,8 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { MdOutlineClear } from "react-icons/md";
 
 import LoginMenu from "~/components/login-menu";
 import MobileSongList from "~/components/mobile-song-list";
@@ -20,6 +21,16 @@ export default function NotesPage() {
   const { q, songListItems } = useLoaderData<typeof loader>();
   const submit = useSubmit();
   const user = useOptionalUser();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleClick = () => {
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      submit(formRef.current);
+      inputRef.current.focus();
+    }
+  };
 
   useEffect(() => {
     const searchField = document.querySelector("input[name=q]");
@@ -32,18 +43,34 @@ export default function NotesPage() {
     <>
       <div className="flex">
         <Form
+          ref={formRef}
           onChange={(event) => {
             submit(event.currentTarget);
           }}
+          className="search-form flex relative border border-gray-600 rounded-md"
         >
           <input
+            ref={inputRef}
             aria-label="Search songs"
             defaultValue={q || ""}
             type="search"
-            className="p-2"
             placeholder="Search"
+            className="border-none outline-none p-2"
             name="q"
           />
+          <button
+            aria-label="clear"
+            className={`p-2 md:p-1 md:m-1 ${
+              !inputRef.current?.value ? "invisible" : ""
+            }`}
+            onClick={handleClick}
+          >
+            <MdOutlineClear
+              size={24}
+              className="text-gray-500 dark:text-gray-400"
+            />
+            <span className="sr-only">Clear</span>
+          </button>
         </Form>
         {user?.isAdmin ? (
           <Link

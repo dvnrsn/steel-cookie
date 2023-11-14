@@ -8,9 +8,10 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { BsArrowLeft, BsPencil, BsYoutube } from "react-icons/bs/index.js";
+import { getClientIPAddress } from "remix-utils/get-client-ip-address";
 import invariant from "tiny-invariant";
 
-import { deleteSong, getSong } from "~/models/song.server";
+import { deleteSong, getSong, logSongView } from "~/models/song.server";
 import { authenticator, requireUserId } from "~/session.server";
 import { useOptionalUser } from "~/utils";
 
@@ -22,6 +23,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   if (!song) {
     throw new Response("Not Found", { status: 404 });
   }
+
+  await logSongView({
+    songId: song.id,
+    ip: getClientIPAddress(request) || "",
+    userId: user?.id,
+  });
+
   return json({ song });
 };
 

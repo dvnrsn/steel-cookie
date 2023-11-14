@@ -20,10 +20,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password     Password?
-  notes        Note[]
-  createdSongs Song[]    @relation(name: "CreatedBy")
-  updatedSongs Song[]    @relation(name: "UpdatedBy")
+  password          Password?
+  notes             Note[]
+  createdSongs      Song[]              @relation(name: "CreatedBy")
+  updatedSongs      Song[]              @relation(name: "UpdatedBy")
+  AnalyticsSongView AnalyticsSongView[]
 }
 
 model Password {
@@ -54,8 +55,9 @@ model Song {
   createdBy   User   @relation(name: "CreatedBy", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdById String
 
-  updatedBy   User?   @relation(name: "UpdatedBy", fields: [updatedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  updatedById String?
+  updatedBy         User?               @relation(name: "UpdatedBy", fields: [updatedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  updatedById       String?
+  AnalyticsSongView AnalyticsSongView[]
 }
 
 model Note {
@@ -68,4 +70,17 @@ model Note {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
+}
+
+model AnalyticsSongView {
+  id String @id @default(cuid())
+  ip String
+
+  song   Song @relation(fields: [songId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  songId Int
+
+  createdAt DateTime @default(now())
+
+  user   User?   @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  userId String?
 }

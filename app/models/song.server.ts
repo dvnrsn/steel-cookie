@@ -111,6 +111,24 @@ export function getSongListItems({ q }: { q: string }) {
   });
 }
 
+export function logSongView({
+  songId,
+  userId,
+  ip,
+}: {
+  songId: Song["id"];
+  userId?: User["id"];
+  ip: string;
+}) {
+  return prisma.analyticsSongView.create({
+    data: {
+      songId,
+      userId,
+      ip,
+    },
+  });
+}
+
 export async function uploadCSV(file: UploadHandlerPart, userId: string) {
   const chunks = [];
   for await (const chunk of file.data) {

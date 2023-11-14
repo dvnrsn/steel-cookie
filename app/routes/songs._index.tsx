@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { MdOutlineClear } from "react-icons/md";
+import { MdOutlineClear } from "react-icons/md/index.js";
 
 import LoginMenu from "~/components/login-menu";
 import MobileSongList from "~/components/mobile-song-list";

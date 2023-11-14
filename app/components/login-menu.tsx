@@ -1,6 +1,6 @@
 import * as Ariakit from "@ariakit/react";
 import { Form, Link } from "@remix-run/react";
-import { AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineMenu } from "react-icons/ai/index.js";
 
 import { useOptionalUser } from "~/utils";
 

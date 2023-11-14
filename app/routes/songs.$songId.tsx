@@ -7,7 +7,7 @@ import {
   useRouteError,
   useSearchParams,
 } from "@remix-run/react";
-import { BsArrowLeft, BsPencil, BsYoutube } from "react-icons/bs";
+import { BsArrowLeft, BsPencil, BsYoutube } from "react-icons/bs/index.js";
 import invariant from "tiny-invariant";
 
 import { deleteSong, getSong } from "~/models/song.server";

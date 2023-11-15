@@ -54,7 +54,7 @@ export default function SongsPage() {
         <Form
           ref={formRef}
           onChange={handleSubmit}
-          className="search-form flex relative border border-gray-600 rounded-md"
+          className="search-form flex relative border border-gray-600 rounded-md dark:bg-slate-700"
         >
           <input
             ref={inputRef}
@@ -73,7 +73,7 @@ export default function SongsPage() {
           >
             <MdOutlineClear
               size={24}
-              className="text-gray-500 dark:text-gray-400"
+              className="text-gray-500 dark:text-gray-300"
             />
             <span className="sr-only">Clear</span>
           </button>

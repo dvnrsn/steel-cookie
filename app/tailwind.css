@@ -35,6 +35,10 @@ input {
   background: hsl(214.3, 31.8%, 91.4%);
 }
 
+.song-thead-box-shadow {
+  box-shadow: 0 8px 6px -6px hsla(0, 0%, 0%, 0.3);
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color: hsl(216, 12.2%, 83.9%);
@@ -49,6 +53,9 @@ input {
   }
   .menu-item:hover {
     background: hsl(214.3, 31.8%, 8.6%);
+  }
+  .song-thead-box-shadow {
+    box-shadow: 0 8px 6px -6px hsla(0, 0%, 100%, 0.3);
   }
 }
 
@@ -69,8 +76,4 @@ input[type="search"]::-webkit-search-results-decoration {
 .scrollbar-gutter {
   scrollbar-gutter: stable;
   overflow-y: auto;
-}
-
-.song-thead-box-shadow {
-  box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
 }

@@ -110,7 +110,7 @@ export default function SongsPage() {
       <MobileSongList songListItems={songListItems} q={q} />
       <table className="w-full text-left hidden md:table table-fixed mt-4">
         <thead
-          className="sticky top-[-1px] bg-white border-gray-500 border-solid border-b-2"
+          className="sticky top-[-1px] bg-white dark:bg-gray-900 border-gray-500 border-solid border-b-2"
           ref={theadRef}
         >
           <tr>
@@ -122,7 +122,10 @@ export default function SongsPage() {
         </thead>
         <tbody>
           {songListItems.map((song) => (
-            <tr key={song.id} className="hover:bg-slate-100">
+            <tr
+              key={song.id}
+              className="hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
               <td
                 className="px-2 py-3 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
                 title={`${(song.title?.length || 0) > 30 ? song.title : ""}`}

@@ -36,6 +36,7 @@
     "@remix-run/serve": "^2.1.0",
     "@types/cookie": "^0.5.4",
     "bcryptjs": "^2.4.3",
+    "crypto-js": "^4.2.0",
     "is-ip": "^5.0.1",
     "isbot": "^3.6.13",
     "papaparse": "^5.4.1",

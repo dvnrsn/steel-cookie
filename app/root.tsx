@@ -8,10 +8,13 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
+import { HoneypotProvider } from "remix-utils/honeypot/react";
 
 import stylesheet from "~/tailwind.css";
 
+import { honeypot } from "./honeypot.server";
 import { authenticator } from "./session.server";
 
 export const links: LinksFunction = () => [
@@ -20,10 +23,14 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ user: await authenticator.isAuthenticated(request) });
+  return json({
+    user: await authenticator.isAuthenticated(request),
+    honeypotInputProps: honeypot.getInputProps(),
+  });
 };
 
 export default function App() {
+  const { honeypotInputProps } = useLoaderData<typeof loader>();
   return (
     <html lang="en" className="h-full">
       <head>
@@ -33,7 +40,9 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <Outlet />
+        <HoneypotProvider {...honeypotInputProps}>
+          <Outlet />
+        </HoneypotProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

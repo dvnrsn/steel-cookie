@@ -7,7 +7,10 @@ import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { SocialsProvider } from "remix-auth-socials";
+import { HoneypotInputs } from "remix-utils/honeypot/react";
+import { SpamError } from "remix-utils/honeypot/server";
 
+import { honeypot } from "~/honeypot.server";
 import { verifyLogin } from "~/models/user.server";
 import { authenticator, sessionStorage } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
@@ -23,8 +26,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const email = formData.get("email");
   const password = formData.get("password");
   const remember = formData.get("remember");
-
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
+
+  try {
+    honeypot.check(formData);
+  } catch (error) {
+    console.log("error", error);
+    if (error instanceof SpamError) {
+      return json({ errors: { email: null, password: null } }, { status: 400 });
+    }
+    throw error;
+  }
 
   if (!validateEmail(email)) {
     return json(
@@ -149,6 +161,7 @@ export default function LoginPage() {
               ) : null}
             </div>
           </div>
+          <HoneypotInputs />
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
           <button

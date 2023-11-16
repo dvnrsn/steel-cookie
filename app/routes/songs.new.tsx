@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import { BsArrowLeft } from "react-icons/bs/index.js";
 import { z } from "zod";
 
 import { createSong } from "~/models/song.server";
@@ -40,124 +41,139 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
 
 export default function SongCreatePage() {
   const result = useActionData<typeof action>();
+  const [searchParams] = useSearchParams();
 
   return (
-    <Form method="post">
+    <Form method="post" className="max-w-[800px] mx-auto">
+      <Link
+        to={`..${searchParams.get("q") ? `?q=${searchParams.get("q")}` : ""}`}
+        className="inline-block md:block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
+        aria-label="Songs"
+      >
+        <BsArrowLeft size={24} />
+        <span className="sr-only">Songs</span>
+      </Link>
       {JSON.stringify(result?.error)}
       <h3 className="text-2xl font-bold">Create Song</h3>
 
-      <label className="block mt-4" htmlFor="title">
-        Song Title *
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="title"
-        name="title"
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 mt-4">
+        <div className="w-full">
+          <label className="block" htmlFor="title">
+            Song Title *
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="text"
+            id="title"
+            name="title"
+          />
+        </div>
+        <div className="w-full">
+          <label className="block" htmlFor="artist">
+            Artist *
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="text"
+            id="artist"
+            name="artist"
+          />
+        </div>
+        <div className="w-full">
+          <label className="block" htmlFor="songLink">
+            Song Link
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="url"
+            id="songLink"
+            name="songLink"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 mt-8">
+        <div>
+          <label className="block" htmlFor="danceName">
+            Dance Name
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="text"
+            id="danceName"
+            name="danceName"
+          />
+        </div>
+        <div>
+          <label className="block" htmlFor="danceChoreographer">
+            Choreographer
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="text"
+            id="danceChoreographer"
+            name="danceChoreographer"
+          />
+        </div>
+        <div>
+          <label className="block" htmlFor="danceInstructionsLink">
+            Dance Instructions Link
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="url"
+            id="danceInstructionsLink"
+            name="danceInstructionsLink"
+          />
+        </div>
 
-      <label className="block mt-4" htmlFor="artist">
-        Artist *
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="artist"
-        name="artist"
-      />
-
-      <label className="block mt-4" htmlFor="songLink">
-        Song Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="songLink"
-        name="songLink"
-      />
-
-      <label className="block mt-4" htmlFor="spotifyLink">
-        Spotify Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="spotifyLink"
-        name="spotifyLink"
-      />
-
-      <label className="block mt-4" htmlFor="danceName">
-        Dance Name
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="danceName"
-        name="danceName"
-      />
-
-      <label className="block mt-4" htmlFor="danceInstructionsLink">
-        Dance Instructions Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="danceInstructionsLink"
-        name="danceInstructionsLink"
-      />
-
-      <label className="block mt-4" htmlFor="danceChoreographer">
-        Choreographer
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="danceChoreographer"
-        name="danceChoreographer"
-      />
-
-      <label className="block mt-4" htmlFor="stepSheetLink">
-        Step Sheet Link
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="url"
-        id="stepSheetLink"
-        name="stepSheetLink"
-      />
-
-      <label className="block mt-4" htmlFor="danceCounts">
-        Dance Counts
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="danceCounts"
-        name="danceCounts"
-        defaultValue="32"
-      />
-
-      <label className="block mt-4" htmlFor="wallCounts">
-        Wall Counts
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="wallCounts"
-        name="wallCounts"
-        defaultValue="4"
-      />
-
-      <label className="block mt-4" htmlFor="startingWeightFoot">
-        Starting Weight Foot
-      </label>
-      <input
-        className="px-2 py-1 w-full md:w-auto"
-        type="text"
-        id="startingWeightFoot"
-        name="startingWeightFoot"
-        defaultValue={"Left"}
-      />
+        <div>
+          <label className="block" htmlFor="stepSheetLink">
+            Step Sheet Link
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="url"
+            id="stepSheetLink"
+            name="stepSheetLink"
+          />
+        </div>
+        <div>
+          <label className="block" htmlFor="danceCounts">
+            Dance Counts
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="text"
+            id="danceCounts"
+            name="danceCounts"
+            defaultValue="32"
+          />
+        </div>
+        <div>
+          <label className="block" htmlFor="wallCounts">
+            Wall Counts
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="text"
+            id="wallCounts"
+            name="wallCounts"
+            defaultValue="4"
+          />
+        </div>
+        <div>
+          <label className="block" htmlFor="startingWeightFoot">
+            Starting Weight Foot
+          </label>
+          <input
+            className="px-2 py-1 w-full"
+            type="text"
+            id="startingWeightFoot"
+            name="startingWeightFoot"
+            defaultValue={"Left"}
+          />
+        </div>
+      </div>
 
       <button
         className="w-full block md:w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 ml-auto mt-4"

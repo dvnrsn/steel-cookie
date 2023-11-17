@@ -10,7 +10,7 @@ import { BsArrowLeft } from "react-icons/bs/index.js";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
-import { editSong, getSong } from "~/models/song.server";
+import { deleteSong, editSong, getSong } from "~/models/song.server";
 import { requireAdmin } from "~/session.server";
 
 const schema = z.object({
@@ -32,7 +32,13 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const user = await requireAdmin(request);
   const formData = await request.formData();
 
-  const payload = Object.fromEntries(formData);
+  const { _action, ...payload } = Object.fromEntries(formData);
+
+  if (_action === "delete") {
+    await deleteSong({ id: parseInt(params.songId) });
+    return redirect("/songs");
+  }
+
   const result = schema.safeParse(payload);
 
   if (!result.success) {
@@ -204,9 +210,24 @@ export default function SongEditPage() {
           </div>
         </div>
         <div className="flex gap-4 mt-8 justify-end">
+          <button
+            type="submit"
+            className="block rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 focus:bg-red-400  mr-auto"
+            onClick={(event) => {
+              const response = confirm(
+                "Are you sure you want to delete this song?",
+              );
+              if (!response) {
+                event.preventDefault();
+              }
+            }}
+            name="_action"
+            value="delete"
+          >
+            Delete
+          </button>
           <Link
             className="w-auto rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600 focus:bg-gray-400"
-            type="submit"
             to={`..${
               searchParams.get("q") ? `?q=${searchParams.get("q")}` : ""
             }`}
@@ -216,29 +237,12 @@ export default function SongEditPage() {
           <button
             className="block w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
             type="submit"
+            name="_action"
+            value="save"
           >
             Save Changes
           </button>
         </div>
-      </Form>
-      <Form
-        action={`/songs/${song.id}/delete`}
-        method="post"
-        onSubmit={(event) => {
-          const response = confirm(
-            "Are you sure you want to delete this song?",
-          );
-          if (!response) {
-            event.preventDefault();
-          }
-        }}
-      >
-        <button
-          type="submit"
-          className="block mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 focus:bg-red-400"
-        >
-          Delete
-        </button>
       </Form>
     </div>
   );

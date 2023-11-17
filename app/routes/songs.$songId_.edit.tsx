@@ -1,5 +1,12 @@
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useActionData,
+  useLoaderData,
+  useSearchParams,
+} from "@remix-run/react";
+import { BsArrowLeft } from "react-icons/bs/index.js";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
@@ -54,141 +61,165 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 export default function SongEditPage() {
   const data = useLoaderData<typeof loader>();
   const result = useActionData<typeof action>();
+  const [searchParams] = useSearchParams();
 
   const { song } = data;
   return (
-    <>
+    <div className="max-w-[800px] mx-auto">
       <Form method="post">
+        <Link
+          to={`..${searchParams.get("q") ? `?q=${searchParams.get("q")}` : ""}`}
+          className="inline-block md:block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
+          aria-label="Songs"
+        >
+          <BsArrowLeft size={24} />
+          <span className="sr-only">Songs</span>
+        </Link>
         {JSON.stringify(result?.error)}
         <h3 className="text-2xl font-bold">Edit Song Details</h3>
 
-        <label className="block mt-4" htmlFor="title">
-          Song Title
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="text"
-          id="title"
-          name="title"
-          defaultValue={song.title}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 mt-4">
+          <div className="w-full">
+            <label className="block" htmlFor="title">
+              Song Title *
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="text"
+              id="title"
+              name="title"
+              defaultValue={song.title}
+            />
+          </div>
+          <div className="w-full">
+            <label className="block" htmlFor="artist">
+              Artist *
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="text"
+              id="artist"
+              name="artist"
+              defaultValue={song.artist}
+            />
+          </div>
+          <div className="w-full">
+            <label className="block" htmlFor="songLink">
+              Song Link
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="url"
+              id="songLink"
+              name="songLink"
+              defaultValue={song.songLink || ""}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 mt-8">
+          <div>
+            <label className="block" htmlFor="danceName">
+              Dance Name
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="text"
+              id="danceName"
+              name="danceName"
+              defaultValue={song.danceName || ""}
+            />
+          </div>
+          <div>
+            <label className="block" htmlFor="danceChoreographer">
+              Choreographer
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="text"
+              id="danceChoreographer"
+              name="danceChoreographer"
+              defaultValue={song.danceChoreographer || ""}
+            />
+          </div>
+          <div>
+            <label className="block" htmlFor="danceInstructionsLink">
+              Dance Instructions Link
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="url"
+              id="danceInstructionsLink"
+              name="danceInstructionsLink"
+              defaultValue={song.danceInstructionsLink || ""}
+            />
+          </div>
 
-        <label className="block mt-4" htmlFor="artist">
-          Artist
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="text"
-          id="artist"
-          name="artist"
-          defaultValue={song.artist}
-        />
-
-        <label className="block mt-4" htmlFor="songLink">
-          Song Link
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="url"
-          id="songLink"
-          name="songLink"
-          defaultValue={song.songLink || ""}
-        />
-
-        <label className="block mt-4" htmlFor="spotifyLink">
-          Spotify Link
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="url"
-          id="spotifyLink"
-          name="spotifyLink"
-          defaultValue={song.spotifyLink || ""}
-        />
-
-        <label className="block mt-4" htmlFor="danceName">
-          Dance Name
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="text"
-          id="danceName"
-          name="danceName"
-          defaultValue={song.danceName || ""}
-        />
-
-        <label className="block mt-4" htmlFor="danceInstructionsLink">
-          Dance Instructions Link
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="url"
-          id="danceInstructionsLink"
-          name="danceInstructionsLink"
-          defaultValue={song.danceInstructionsLink || ""}
-        />
-
-        <label className="block mt-4" htmlFor="danceChoreographer">
-          Choreographer
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="text"
-          id="danceChoreographer"
-          name="danceChoreographer"
-          defaultValue={song.danceChoreographer || ""}
-        />
-
-        <label className="block mt-4" htmlFor="stepSheetLink">
-          Step Sheet Link
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="url"
-          id="stepSheetLink"
-          name="stepSheetLink"
-          defaultValue={song.stepSheetLink || ""}
-        />
-
-        <label className="block mt-4" htmlFor="danceCounts">
-          Dance Counts
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="text"
-          id="danceCounts"
-          name="danceCounts"
-          defaultValue={song.danceCounts || ""}
-        />
-
-        <label className="block mt-4" htmlFor="wallCounts">
-          Wall Counts
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="text"
-          id="wallCounts"
-          name="wallCounts"
-          defaultValue={song.wallCounts || ""}
-        />
-
-        <label className="block mt-4" htmlFor="startingWeightFoot">
-          Starting Weight Foot
-        </label>
-        <input
-          className="px-2 py-1 w-full md:w-auto"
-          type="text"
-          id="startingWeightFoot"
-          name="startingWeightFoot"
-          defaultValue={song.startingWeightFoot || ""}
-        />
-
-        <button
-          className="block w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 ml-auto mt-4 fixed bottom-10 right-20"
-          type="submit"
-        >
-          Save Changes
-        </button>
+          <div>
+            <label className="block" htmlFor="stepSheetLink">
+              Step Sheet Link
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="url"
+              id="stepSheetLink"
+              name="stepSheetLink"
+              defaultValue={song.stepSheetLink || ""}
+            />
+          </div>
+          <div>
+            <label className="block" htmlFor="danceCounts">
+              Dance Counts
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="text"
+              id="danceCounts"
+              name="danceCounts"
+              defaultValue={song.danceCounts || ""}
+            />
+          </div>
+          <div>
+            <label className="block" htmlFor="wallCounts">
+              Wall Counts
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="text"
+              id="wallCounts"
+              name="wallCounts"
+              defaultValue={song.wallCounts || ""}
+            />
+          </div>
+          <div>
+            <label className="block" htmlFor="startingWeightFoot">
+              Starting Weight Foot
+            </label>
+            <input
+              className="px-2 py-1 w-full"
+              type="text"
+              id="startingWeightFoot"
+              name="startingWeightFoot"
+              defaultValue={song.startingWeightFoot || ""}
+            />
+          </div>
+        </div>
+        <div className="flex gap-4 mt-8 justify-end">
+          <Link
+            className="w-auto rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600 focus:bg-gray-400"
+            type="submit"
+            to={`..${
+              searchParams.get("q") ? `?q=${searchParams.get("q")}` : ""
+            }`}
+          >
+            Cancel
+          </Link>
+          <button
+            className="block w-auto rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+            type="submit"
+          >
+            Save Changes
+          </button>
+        </div>
       </Form>
       <Form
         action={`/songs/${song.id}/delete`}
@@ -209,6 +240,6 @@ export default function SongEditPage() {
           Delete
         </button>
       </Form>
-    </>
+    </div>
   );
 }

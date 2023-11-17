@@ -77,3 +77,25 @@ input[type="search"]::-webkit-search-results-decoration {
   scrollbar-gutter: stable;
   overflow-y: auto;
 }
+
+/* animation */
+@keyframes cowboy-boot {
+  0% {
+    transform: rotate(-10deg);
+  }
+  30% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: translateY(0%) rotate(-10deg);
+  }
+}
+
+.cowboy-boot {
+  animation: cowboy-boot 0.5s cubic-bezier(0.33, 0, 0.67, 1) infinite;
+  transform-origin: bottom left;
+  animation-delay: 0.5s;
+}

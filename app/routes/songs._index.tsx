@@ -1,9 +1,16 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useLoaderData,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { MdOutlineClear } from "react-icons/md/index.js";
 
+import { Loader } from "~/components/loader";
 import LoginMenu from "~/components/login-menu";
 import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
@@ -24,6 +31,7 @@ export default function SongsPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const theadRef = useRef<HTMLTableSectionElement>(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const thead = theadRef.current as HTMLTableSectionElement;
@@ -35,7 +43,7 @@ export default function SongsPage() {
         ),
       { threshold: [1] },
     );
-    observer.observe(thead);
+    if (thead) observer.observe(thead);
     return () => {
       observer.disconnect();
     };
@@ -67,7 +75,7 @@ export default function SongsPage() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex items-center">
         <Form
           ref={formRef}
           onChange={handleSubmit}
@@ -95,6 +103,7 @@ export default function SongsPage() {
             <span className="sr-only">Clear</span>
           </button>
         </Form>
+        <Loader visible={navigation.state === "loading"} />
         {user?.isAdmin ? (
           <Link
             to="new"
@@ -107,59 +116,78 @@ export default function SongsPage() {
           <LoginMenu />
         </div>
       </div>
-      <MobileSongList songListItems={songListItems} q={q} />
-      <table className="w-full text-left hidden md:table table-fixed mt-4">
-        <thead
-          className="sticky top-[-1px] bg-white dark:bg-gray-900 border-gray-500 border-solid border-b-2"
-          ref={theadRef}
-        >
-          <tr>
-            <th className="py-3 px-2  w-1/4">Title</th>
-            <th className="py-3 px-2 w-1/4">Artist</th>
-            <th className="py-3 px-2 w-1/4">Dance Name</th>
-            <th className="py-3 px-2 w-1/4">Choreographer</th>
-          </tr>
-        </thead>
-        <tbody>
-          {songListItems.map((song) => (
-            <tr
-              key={song.id}
-              className="hover:bg-slate-100 dark:hover:bg-slate-800"
+      {songListItems.length === 0 ? (
+        <div className="max-w-lg md:absolute mt-4 md:m-auto inset-0 flex flex-col items-center max-h-[500px]">
+          Hmm, no songs found. Maybe try a different search?
+          <img
+            src="https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/cowboy-standing-in-desert-with-empty-matthias-clamer.jpg"
+            alt="cowoy standing in desert with empty matthias clamer"
+            className="rounded-md mt-4"
+          />
+        </div>
+      ) : (
+        <>
+          <MobileSongList songListItems={songListItems} q={q} />
+          <table className="w-full text-left hidden md:table table-fixed mt-4">
+            <thead
+              className="sticky top-[-1px] bg-white dark:bg-gray-900 border-gray-500 border-solid border-b-2"
+              ref={theadRef}
             >
-              <td
-                className="px-2 py-3 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
-                title={`${(song.title?.length || 0) > 30 ? song.title : ""}`}
-              >
-                <Link to={`${song.id}${q ? `?q=${q}` : ""}`}>{song.title}</Link>
-              </td>
-              <td
-                className="py-3 px-2 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
-                title={`${(song.artist?.length || 0) > 30 ? song.artist : ""}`}
-              >
-                {song.artist}
-              </td>
-              <td
-                className="py-3 px-2 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
-                title={`${
-                  (song.danceName?.length || 0) > 30 ? song.danceName : ""
-                }`}
-              >
-                {song.danceName}
-              </td>
-              <td
-                className="py-3 px-2 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
-                title={`${
-                  (song.danceChoreographer?.length || 0) > 30
-                    ? song.danceChoreographer
-                    : ""
-                }`}
-              >
-                {song.danceChoreographer}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              <tr>
+                <th className="py-3 px-2  w-1/4">Title</th>
+                <th className="py-3 px-2 w-1/4">Artist</th>
+                <th className="py-3 px-2 w-1/4">Dance Name</th>
+                <th className="py-3 px-2 w-1/4">Choreographer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {songListItems.map((song) => (
+                <tr
+                  key={song.id}
+                  className="hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <td
+                    className="px-2 py-3 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
+                    title={`${
+                      (song.title?.length || 0) > 30 ? song.title : ""
+                    }`}
+                  >
+                    <Link to={`${song.id}${q ? `?q=${q}` : ""}`}>
+                      {song.title}
+                    </Link>
+                  </td>
+                  <td
+                    className="py-3 px-2 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
+                    title={`${
+                      (song.artist?.length || 0) > 30 ? song.artist : ""
+                    }`}
+                  >
+                    {song.artist}
+                  </td>
+                  <td
+                    className="py-3 px-2 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
+                    title={`${
+                      (song.danceName?.length || 0) > 30 ? song.danceName : ""
+                    }`}
+                  >
+                    {song.danceName}
+                  </td>
+                  <td
+                    className="py-3 px-2 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"
+                    title={`${
+                      (song.danceChoreographer?.length || 0) > 30
+                        ? song.danceChoreographer
+                        : ""
+                    }`}
+                  >
+                    {song.danceChoreographer}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </>
   );
 }

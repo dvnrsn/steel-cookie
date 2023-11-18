@@ -115,9 +115,9 @@ export default function SongDetailsPage() {
               className="flex justify-center items-center my-4 h-16 bg-slate-100  dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600"
             >
               <img
-                src="https://www.copperknob.co.uk/images/star.png"
+                src="/images/copper-knob-star.png"
                 alt="copper knob star"
-                className="h-6"
+                className="h-6 w-6"
               ></img>
               &nbsp; Step Sheet
             </a>

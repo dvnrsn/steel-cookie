@@ -122,7 +122,7 @@ export default function SongsPage() {
           <img
             src="https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/cowboy-standing-in-desert-with-empty-matthias-clamer.jpg"
             alt="cowoy standing in desert with empty matthias clamer"
-            className="rounded-md mt-4"
+            className="rounded-md mt-4 object-none object-[1%_33%] md:object-contain"
           />
         </div>
       ) : (

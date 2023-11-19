@@ -1,18 +1,25 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
+  Form,
   Link,
   isRouteErrorResponse,
+  useActionData,
   useLoaderData,
   useRouteError,
   useSearchParams,
 } from "@remix-run/react";
+import { useEffect } from "react";
 import { BsArrowLeft, BsPencil, BsYoutube } from "react-icons/bs/index.js";
 import { getClientIPAddress } from "remix-utils/get-client-ip-address";
 import invariant from "tiny-invariant";
 
-import { deleteSong, getSong, logSongView } from "~/models/song.server";
-import { authenticator, requireUserId } from "~/session.server";
+import {
+  getSong,
+  logSongView,
+  markSongPlaybackEvent,
+} from "~/models/song.server";
+import { authenticator } from "~/session.server";
 import { useOptionalUser } from "~/utils";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -34,18 +41,32 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  await requireUserId(request);
+  const user = await authenticator.isAuthenticated(request);
   invariant(params.songId, "songId not found");
   const id = parseInt(params.songId);
-  await deleteSong({ id });
+  const res = await markSongPlaybackEvent({ songId: id, userId: user?.id });
 
-  return redirect("/songs");
+  return json({
+    status: "ok",
+    ...("alreadyMarked" in res ? { alreadyMarked: res.alreadyMarked } : {}),
+  });
 };
 
 export default function SongDetailsPage() {
   const { song } = useLoaderData<typeof loader>();
   const user = useOptionalUser();
   const [searchParams] = useSearchParams();
+  const result = useActionData<typeof action>();
+
+  useEffect(() => {
+    if (result?.alreadyMarked) {
+      alert("Already got it, thanks!");
+    } else if (result?.status === "ok") {
+      alert("Song marked as played");
+    } else if (result) {
+      alert("Error marking song as played");
+    }
+  }, [result]);
 
   return (
     <div className="w-full flex justify-center md:mt-6">
@@ -121,6 +142,15 @@ export default function SongDetailsPage() {
               ></img>
               &nbsp; Step Sheet
             </a>
+          ) : null}
+
+          {user?.isAdmin ? (
+            <Form method="post">
+              <button className="flex justify-center items-center my-4 h-16 bg-slate-100  dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 w-full">
+                <span className="text-xl">🔊&nbsp;</span>
+                &nbsp; Mark Event
+              </button>
+            </Form>
           ) : null}
 
           <p>Choreographer: {song.danceChoreographer}</p>

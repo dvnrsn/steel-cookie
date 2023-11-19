@@ -25,6 +25,7 @@ model User {
   createdSongs      Song[]              @relation(name: "CreatedBy")
   updatedSongs      Song[]              @relation(name: "UpdatedBy")
   AnalyticsSongView AnalyticsSongView[]
+  PlaybackEvent     PlaybackEvent[]
 }
 
 model Password {
@@ -58,6 +59,19 @@ model Song {
   updatedBy         User?               @relation(name: "UpdatedBy", fields: [updatedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
   updatedById       String?
   AnalyticsSongView AnalyticsSongView[]
+  PlaybackEvent     PlaybackEvent[]
+}
+
+model PlaybackEvent {
+  id Int @id @default(autoincrement())
+
+  song   Song @relation(fields: [songId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  songId Int
+
+  createdAt DateTime @default(now())
+
+  user   User?   @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  userId String?
 }
 
 model Note {

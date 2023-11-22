@@ -68,7 +68,7 @@ export default function SongsPage() {
 
   useEffect(() => {
     const searchField = document.querySelector("input[name=q]");
-    if (searchField instanceof HTMLInputElement) {
+    if (searchField instanceof HTMLInputElement && !searchField.value) {
       searchField.value = q || "";
     }
   }, [q]);

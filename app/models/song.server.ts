@@ -119,18 +119,7 @@ export async function markSongPlaybackEvent({
   });
 }
 
-export function getSongListItems({ q }: { q: string }) {
-  const where = q
-    ? {
-        OR: [
-          { title: { contains: q } },
-          { artist: { contains: q } },
-
-          { danceName: { contains: q } },
-          { danceChoreographer: { contains: q } },
-        ],
-      }
-    : {};
+export function getSongListItems() {
   return prisma.song.findMany({
     select: {
       id: true,
@@ -139,7 +128,6 @@ export function getSongListItems({ q }: { q: string }) {
       danceName: true,
       artist: true,
     },
-    where,
     orderBy: { updatedAt: "desc" },
   });
 }

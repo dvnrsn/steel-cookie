@@ -1,13 +1,8 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import {
-  Form,
-  Link,
-  useLoaderData,
-  useNavigation,
-  useSubmit,
-} from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
+import Fuse from "fuse.js";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineClear } from "react-icons/md/index.js";
 
 import { Loader } from "~/components/loader";
@@ -20,18 +15,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q") ?? "";
 
-  const songListItems = await getSongListItems({ q });
+  const songListItems = await getSongListItems();
   return json({ songListItems, q });
 };
 
 export default function SongsPage() {
   const { q, songListItems } = useLoaderData<typeof loader>();
-  const submit = useSubmit();
   const user = useOptionalUser();
   const inputRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
   const theadRef = useRef<HTMLTableSectionElement>(null);
   const navigation = useNavigation();
+  const [search, setSearch] = useState(q);
 
   useEffect(() => {
     const thead = theadRef.current as HTMLTableSectionElement;
@@ -49,51 +43,38 @@ export default function SongsPage() {
     };
   }, [theadRef]);
 
-  const handleSubmit = () => {
-    const formData = new FormData();
-    const searchValue = inputRef.current?.value ?? "";
-    if (searchValue) {
-      formData.append("q", searchValue);
-    }
-    submit(formData);
-  };
-
   const handleClear = () => {
-    if (inputRef.current) {
-      inputRef.current.value = "";
-      handleSubmit();
-      inputRef.current.focus();
-    }
+    setSearch("");
+    inputRef.current?.focus();
   };
 
-  useEffect(() => {
-    const searchField = document.querySelector("input[name=q]");
-    if (searchField instanceof HTMLInputElement && !searchField.value) {
-      searchField.value = q || "";
-    }
-  }, [q]);
+  const filteredSongItems = useMemo(() => {
+    if (!search) return songListItems;
+    const fuseOptions = {
+      threshold: 0.35,
+      keys: ["title", "artist", "danceName", "danceChoreographer"],
+    };
+    const fuse = new Fuse(songListItems, fuseOptions);
+    return fuse.search(search).map((result) => result.item);
+  }, [songListItems, search]);
 
   return (
     <>
       <div className="flex items-center">
-        <Form
-          ref={formRef}
-          onChange={handleSubmit}
-          className="search-form flex relative border border-gray-600 rounded-md dark:bg-slate-700"
-        >
+        <Form className="search-form flex relative border border-gray-600 rounded-md dark:bg-slate-700">
           <input
             ref={inputRef}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             aria-label="Search songs"
-            defaultValue={q || ""}
             type="search"
             placeholder="Search"
             className="border-none outline-none p-2"
-            name="q"
           />
           <button
             type="button"
             aria-label="clear"
-            className={`p-2 md:p-1 md:m-1 ${q ? "" : "invisible"}`}
+            className={`p-2 md:p-1 md:m-1 ${search ? "" : "invisible"}`}
             onClick={handleClear}
           >
             <MdOutlineClear
@@ -141,7 +122,7 @@ export default function SongsPage() {
               </tr>
             </thead>
             <tbody>
-              {songListItems.map((song) => (
+              {filteredSongItems.map((song) => (
                 <tr
                   key={song.id}
                   className="hover:bg-slate-100 dark:hover:bg-slate-800"

@@ -1,11 +1,10 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import Fuse from "fuse.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineClear } from "react-icons/md/index.js";
 
-import { Loader } from "~/components/loader";
 import LoginMenu from "~/components/login-menu";
 import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
@@ -24,7 +23,6 @@ export default function SongsPage() {
   const user = useOptionalUser();
   const inputRef = useRef<HTMLInputElement>(null);
   const theadRef = useRef<HTMLTableSectionElement>(null);
-  const navigation = useNavigation();
   const [search, setSearch] = useState(q);
 
   useEffect(() => {
@@ -84,7 +82,6 @@ export default function SongsPage() {
             <span className="sr-only">Clear</span>
           </button>
         </Form>
-        <Loader visible={navigation.state === "loading"} />
         {user?.isAdmin ? (
           <Link
             to="new"

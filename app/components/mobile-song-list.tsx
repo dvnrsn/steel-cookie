@@ -1,21 +1,20 @@
 import type { Song } from "@prisma/client";
-import { Link } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 
 export default function MobileSongList({
   songListItems,
-  q,
 }: {
   songListItems: Pick<
     Song,
     "id" | "title" | "artist" | "danceChoreographer" | "danceName"
   >[];
-  q?: string;
 }) {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col md:hidden mt-4">
       {songListItems.map((song, index) => (
-        <Link
-          to={`${song.id}${q ? `?q=${q}` : ""}`}
+        <button
+          onClick={() => navigate(-1)}
           key={song.id}
           className={`flex flex-col border-gray-200 ${
             index !== songListItems.length - 1
@@ -27,7 +26,7 @@ export default function MobileSongList({
             <div className="text-lg font-bold truncate">{song.title}</div>
             <div className="text-sm">{song.artist}</div>
           </div>
-        </Link>
+        </button>
       ))}
     </div>
   );

@@ -1,6 +1,11 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, useLoaderData, useSearchParams } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useLoaderData,
+  useSearchParams,
+  useSubmit,
+} from "@remix-run/react";
 import Fuse from "fuse.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineClear } from "react-icons/md/index.js";
@@ -11,21 +16,27 @@ import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
 import { useOptionalUser } from "~/utils";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  const q = url.searchParams.get("q") ?? "";
-
+export const loader = async () => {
   const songListItems = await getSongListItems();
-  return json({ songListItems, q });
+  return json({ songListItems });
 };
 
+// don't revalidate because we don't want to refetch the song list
+// all filtering/searching/sorting will be client side
+export const shouldRevalidate = () => false;
+
 export default function SongsPage() {
-  const { q, songListItems } = useLoaderData<typeof loader>();
+  const { songListItems } = useLoaderData<typeof loader>();
   const user = useOptionalUser();
   const inputRef = useRef<HTMLInputElement>(null);
   const theadRef = useRef<HTMLTableSectionElement>(null);
-  const [search, setSearch] = useState(q);
   const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("q") ?? "");
+  const [incomplete, setIncomplete] = useState(
+    searchParams.get("filter") === "incomplete",
+  );
+  const submit = useSubmit();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const thead = theadRef.current as HTMLTableSectionElement;
@@ -43,12 +54,62 @@ export default function SongsPage() {
     };
   }, [theadRef]);
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [timeoutRef]);
+
+  const q = searchParams.get("q");
+  const incompleteFilter = searchParams.get("filter");
+
+  // update the UI to match the URL SearchParams (e.g., seen on back button)
+  // this does fire superflously when user types in the search box
+  // but it's a necessary tradeoff afaict to keep state in sync with URL
+  useEffect(() => {
+    setSearch(q || "");
+  }, [q]);
+
+  useEffect(() => {
+    setIncomplete(incompleteFilter === "incomplete");
+  }, [incompleteFilter]);
+
+  const handleSubmit = ({
+    incompleteArg,
+    searchArg,
+    debounce = false,
+  }: {
+    incompleteArg?: boolean;
+    searchArg?: string;
+    debounce?: boolean;
+  } = {}) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    const q = typeof searchArg === "string" ? searchArg : searchParams.get("q");
+    const filter =
+      typeof incompleteArg === "boolean"
+        ? incompleteArg
+        : searchParams.get("filter");
+
+    const formData = new FormData();
+    if (q) {
+      formData.set("q", q);
+    }
+    if (filter) {
+      formData.set("filter", "incomplete");
+    }
+    if (debounce) {
+      timeoutRef.current = setTimeout(() => submit(formData), 300);
+    } else {
+      submit(formData);
+    }
+  };
+
   const handleClear = () => {
     setSearch("");
     inputRef.current?.focus();
+    handleSubmit({ searchArg: "" });
   };
-
-  const incompleteFilter = searchParams.get("filter");
 
   const filteredSongItems = useMemo(() => {
     let list = songListItems;
@@ -71,7 +132,10 @@ export default function SongsPage() {
           <input
             ref={inputRef}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              handleSubmit({ searchArg: e.target.value, debounce: true });
+            }}
             aria-label="Search songs"
             type="search"
             placeholder="Search"
@@ -99,10 +163,11 @@ export default function SongsPage() {
           </Link>
         ) : null}
         <div className="md:hidden flex ml-auto">
+          <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
           <LoginMenu />
         </div>
-        <div className="flex ml-2">
-          <FilterMenu />
+        <div className="md:flex ml-2 hidden">
+          <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
         </div>
       </div>
       {filteredSongItems.length === 0 ? (
@@ -116,7 +181,7 @@ export default function SongsPage() {
         </div>
       ) : (
         <>
-          <MobileSongList songListItems={filteredSongItems} q={q} />
+          <MobileSongList songListItems={filteredSongItems} />
           <table className="w-full text-left hidden md:table table-fixed mt-4">
             <thead
               className="sticky top-[-1px] bg-white dark:bg-gray-900 border-gray-500 border-solid border-b-2"
@@ -141,9 +206,7 @@ export default function SongsPage() {
                       (song.title?.length || 0) > 30 ? song.title : ""
                     }`}
                   >
-                    <Link to={`${song.id}${q ? `?q=${q}` : ""}`}>
-                      {song.title}
-                    </Link>
+                    <Link to={`${song.id}`}>{song.title}</Link>
                   </td>
                   <td
                     className="py-3 px-2 border-gray-100 dark:border-gray-600 border-solid border-b-2 truncate"

@@ -8,6 +8,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  ShouldRevalidateFunction,
   useLoaderData,
 } from "@remix-run/react";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
@@ -27,6 +28,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     user: await authenticator.isAuthenticated(request),
     honeypotInputProps: honeypot.getInputProps(),
   });
+};
+
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+  nextUrl,
+  defaultShouldRevalidate,
+}) => {
+  if (nextUrl?.pathname === "/songs") {
+    // lot of changing of URL here and we don't need extra requests for the user/honeypot
+    return false;
+  } else return defaultShouldRevalidate;
 };
 
 export default function App() {

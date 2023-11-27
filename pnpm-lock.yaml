@@ -69,8 +69,8 @@ dependencies:
     specifier: ^2.0.5
     version: 2.0.5(@remix-run/react@2.2.0)(@remix-run/server-runtime@2.2.0)
   remix-utils:
-    specifier: ^7.1.0
-    version: 7.1.0(@remix-run/node@2.2.0)(@remix-run/react@2.2.0)(crypto-js@4.2.0)(is-ip@5.0.1)(react@18.2.0)(zod@3.22.4)
+    specifier: ^7.3.0
+    version: 7.3.0(@remix-run/node@2.2.0)(@remix-run/react@2.2.0)(crypto-js@4.2.0)(is-ip@5.0.1)(react@18.2.0)(zod@3.22.4)
   tiny-invariant:
     specifier: ^1.3.1
     version: 1.3.1
@@ -7460,8 +7460,8 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /remix-utils@7.1.0(@remix-run/node@2.2.0)(@remix-run/react@2.2.0)(crypto-js@4.2.0)(is-ip@5.0.1)(react@18.2.0)(zod@3.22.4):
-    resolution: {integrity: sha512-cceintceWvmNvgLLFeAUkWRcdWuOHGDLaWh0aeL0bLGWnMPBilIyT74Rira1az/ImS9owfh8tjLL4w/22AXJiA==}
+  /remix-utils@7.3.0(@remix-run/node@2.2.0)(@remix-run/react@2.2.0)(crypto-js@4.2.0)(is-ip@5.0.1)(react@18.2.0)(zod@3.22.4):
+    resolution: {integrity: sha512-Ea5eNL04Ke4YYKI79ZR5doWtULe3ABkYkqhaP7mKiYcNVYAg6pA0PMuFYR2uyJYCGW43+/WlTfr3D4X5A0PsUA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@remix-run/cloudflare': ^2.0.0
@@ -7501,7 +7501,7 @@ packages:
       crypto-js: 4.2.0
       is-ip: 5.0.1
       react: 18.2.0
-      type-fest: 4.7.1
+      type-fest: 4.8.2
       zod: 3.22.4
     dev: false
 
@@ -8430,8 +8430,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  /type-fest@4.7.1:
-    resolution: {integrity: sha512-iWr8RUmzAJRfhZugX9O7nZE6pCxDU8CZ3QxsLuTnGcBLJpCaP2ll3s4eMTBoFnU/CeXY/5rfQSuAEsTGJO4y8A==}
+  /type-fest@4.8.2:
+    resolution: {integrity: sha512-mcvrCjixA5166hSrUoJgGb9gBQN4loMYyj9zxuMs/66ibHNEFd5JXMw37YVDx58L4/QID9jIzdTBB4mDwDJ6KQ==}
     engines: {node: '>=16'}
     dev: false
 

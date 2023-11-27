@@ -4,6 +4,7 @@ import {
   Link,
   useActionData,
   useLoaderData,
+  useNavigate,
   useSearchParams,
 } from "@remix-run/react";
 import { BsArrowLeft } from "react-icons/bs/index.js";
@@ -68,19 +69,20 @@ export default function SongEditPage() {
   const data = useLoaderData<typeof loader>();
   const result = useActionData<typeof action>();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const { song } = data;
   return (
     <div className="max-w-[800px] mx-auto">
       <Form method="post">
-        <Link
-          to={`..${searchParams.get("q") ? `?q=${searchParams.get("q")}` : ""}`}
+        <button
+          onClick={() => navigate(-1)}
           className="inline-block md:block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
           aria-label="Songs"
         >
           <BsArrowLeft size={24} />
           <span className="sr-only">Songs</span>
-        </Link>
+        </button>
         {JSON.stringify(result?.error)}
         <h3 className="text-2xl font-bold">Edit Song Details</h3>
 

@@ -127,7 +127,7 @@ export default function SongsPage() {
 
   return (
     <>
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
         <Form className="search-form flex relative border border-gray-600 rounded-md dark:bg-slate-700">
           <input
             ref={inputRef}
@@ -154,6 +154,21 @@ export default function SongsPage() {
             <span className="sr-only">Clear</span>
           </button>
         </Form>
+        <div className="md:hidden flex ml-auto items-center gap-1">
+          <div>{filteredSongItems.length} </div>
+          {user?.isAdmin ? (
+            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+          ) : null}
+          <LoginMenu />
+        </div>
+        <div className="md:flex ml-2 hidden items-center">
+          {user?.isAdmin ? (
+            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+          ) : null}
+        </div>
+        <div className="hidden w-20 md:flex justify-end">
+          {filteredSongItems.length} songs
+        </div>
         {user?.isAdmin ? (
           <Link
             to="new"
@@ -162,17 +177,6 @@ export default function SongsPage() {
             + New Song
           </Link>
         ) : null}
-        <div className="md:hidden flex ml-auto">
-          {user?.isAdmin ? (
-            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
-          ) : null}
-          <LoginMenu />
-        </div>
-        <div className="md:flex ml-2 hidden">
-          {user?.isAdmin ? (
-            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
-          ) : null}
-        </div>
       </div>
       {filteredSongItems.length === 0 ? (
         <div className="max-w-lg md:absolute mt-4 md:m-auto inset-0 flex flex-col items-center max-h-[500px]">

@@ -24,7 +24,7 @@ export default function FilterMenu({
       <Ariakit.MenuButton className="items-center justify-center w-11 ml-auto md:h-[revert] md:w-[revert] flex dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg p-2 relative">
         <FiFilter size={24} />
         {incomplete ? (
-          <div className="absolute top-0 rounded-lg right-0 bg-red-300 dark:bg-red-700 h-4 w-4 translate-x-2 -translate-y-2 text-xs">
+          <div className="absolute top-0 rounded-lg right-0 bg-red-300 dark:bg-red-700 h-4 w-4 translate-x-1 -translate-y-1 text-xs">
             1
           </div>
         ) : null}

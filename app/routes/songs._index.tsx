@@ -37,6 +37,8 @@ export default function SongsPage() {
   );
   const submit = useSubmit();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debouncingRef = useRef<boolean>(false);
 
   useEffect(() => {
     const thead = theadRef.current as HTMLTableSectionElement;
@@ -57,17 +59,21 @@ export default function SongsPage() {
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (timeoutDebounceRef.current) clearTimeout(timeoutDebounceRef.current);
     };
-  }, [timeoutRef]);
+  }, [timeoutRef, timeoutDebounceRef]);
 
   const q = searchParams.get("q");
   const incompleteFilter = searchParams.get("filter");
 
   // update the UI to match the URL SearchParams (e.g., seen on back button)
-  // this does fire superflously when user types in the search box
-  // but it's a necessary tradeoff afaict to keep state in sync with URL
+  // ignore for 500 milliseconds after we update the URLSearchParams from submit() debounce
+  // this will ensure the synchronization doesn't add state collision as user types
   useEffect(() => {
-    setSearch(q || "");
+    if (debouncingRef.current) return;
+    if (inputRef.current?.value === q) return;
+    if (inputRef.current?.value === "" && q === null) return;
+    setSearch(q ?? "");
   }, [q]);
 
   useEffect(() => {
@@ -84,6 +90,7 @@ export default function SongsPage() {
     debounce?: boolean;
   } = {}) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (timeoutDebounceRef.current) clearTimeout(timeoutDebounceRef.current);
 
     const q = typeof searchArg === "string" ? searchArg : searchParams.get("q");
     const filter =
@@ -99,7 +106,14 @@ export default function SongsPage() {
       formData.set("filter", "incomplete");
     }
     if (debounce) {
-      timeoutRef.current = setTimeout(() => submit(formData), 300);
+      debouncingRef.current = true;
+      timeoutRef.current = setTimeout(() => {
+        submit(formData);
+      }, 300);
+      timeoutDebounceRef.current = setTimeout(
+        () => (debouncingRef.current = false),
+        700,
+      );
     } else {
       submit(formData);
     }

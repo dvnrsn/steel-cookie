@@ -1,10 +1,11 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import Fuse from "fuse.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineClear } from "react-icons/md/index.js";
 
+import FilterMenu from "~/components/filter-menu";
 import LoginMenu from "~/components/login-menu";
 import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
@@ -24,6 +25,7 @@ export default function SongsPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const theadRef = useRef<HTMLTableSectionElement>(null);
   const [search, setSearch] = useState(q);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const thead = theadRef.current as HTMLTableSectionElement;
@@ -46,15 +48,21 @@ export default function SongsPage() {
     inputRef.current?.focus();
   };
 
+  const incompleteFilter = searchParams.get("filter");
+
   const filteredSongItems = useMemo(() => {
-    if (!search) return songListItems;
+    let list = songListItems;
+    if (incompleteFilter) {
+      list = songListItems.filter((song) => !song.danceInstructionsLink);
+    }
+    if (!search) return list;
     const fuseOptions = {
       threshold: 0.35,
       keys: ["title", "artist", "danceName", "danceChoreographer"],
     };
-    const fuse = new Fuse(songListItems, fuseOptions);
+    const fuse = new Fuse(list, fuseOptions);
     return fuse.search(search).map((result) => result.item);
-  }, [songListItems, search]);
+  }, [songListItems, search, incompleteFilter]);
 
   return (
     <>
@@ -93,8 +101,11 @@ export default function SongsPage() {
         <div className="md:hidden flex ml-auto">
           <LoginMenu />
         </div>
+        <div className="flex ml-2">
+          <FilterMenu />
+        </div>
       </div>
-      {songListItems.length === 0 ? (
+      {filteredSongItems.length === 0 ? (
         <div className="max-w-lg md:absolute mt-4 md:m-auto inset-0 flex flex-col items-center max-h-[500px]">
           Hmm, no songs found. Maybe try a different search?
           <img
@@ -105,14 +116,14 @@ export default function SongsPage() {
         </div>
       ) : (
         <>
-          <MobileSongList songListItems={songListItems} q={q} />
+          <MobileSongList songListItems={filteredSongItems} q={q} />
           <table className="w-full text-left hidden md:table table-fixed mt-4">
             <thead
               className="sticky top-[-1px] bg-white dark:bg-gray-900 border-gray-500 border-solid border-b-2"
               ref={theadRef}
             >
               <tr>
-                <th className="py-3 px-2  w-1/4">Title</th>
+                <th className="py-3 px-2 w-1/4">Title</th>
                 <th className="py-3 px-2 w-1/4">Artist</th>
                 <th className="py-3 px-2 w-1/4">Dance Name</th>
                 <th className="py-3 px-2 w-1/4">Choreographer</th>

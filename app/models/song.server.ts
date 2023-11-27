@@ -126,6 +126,7 @@ export function getSongListItems() {
       title: true,
       danceChoreographer: true,
       danceName: true,
+      danceInstructionsLink: true,
       artist: true,
     },
     orderBy: { updatedAt: "desc" },

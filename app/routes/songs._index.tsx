@@ -163,11 +163,15 @@ export default function SongsPage() {
           </Link>
         ) : null}
         <div className="md:hidden flex ml-auto">
-          <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+          {user?.isAdmin ? (
+            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+          ) : null}
           <LoginMenu />
         </div>
         <div className="md:flex ml-2 hidden">
-          <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+          {user?.isAdmin ? (
+            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+          ) : null}
         </div>
       </div>
       {filteredSongItems.length === 0 ? (

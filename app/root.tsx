@@ -10,6 +10,7 @@ import {
   ScrollRestoration,
   ShouldRevalidateFunction,
   useLoaderData,
+  useNavigation,
 } from "@remix-run/react";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
 
@@ -42,6 +43,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
 export default function App() {
   const { honeypotInputProps } = useLoaderData<typeof loader>();
+  const navigation = useNavigation();
   return (
     <html lang="en" className="h-full">
       <head>
@@ -51,9 +53,15 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <HoneypotProvider {...honeypotInputProps}>
-          <Outlet />
-        </HoneypotProvider>
+        <div
+          className={`h-full ${
+            navigation.state === "loading" ? "loading" : ""
+          }`}
+        >
+          <HoneypotProvider {...honeypotInputProps}>
+            <Outlet />
+          </HoneypotProvider>
+        </div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

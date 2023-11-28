@@ -9,7 +9,7 @@ import {
   useNavigate,
   useRouteError,
 } from "@remix-run/react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { BsArrowLeft, BsPencil, BsYoutube } from "react-icons/bs/index.js";
 import { getClientIPAddress } from "remix-utils/get-client-ip-address";
 import invariant from "tiny-invariant";
@@ -68,6 +68,13 @@ export default function SongDetailsPage() {
     }
   }, [result]);
 
+  const wasJustCreated = useMemo(() => {
+    // usememo so it doesn't run on every render
+    const creation = new Date(song?.createdAt || "");
+    const twentySecondsAgo = new Date(Date.now() - 20 * 1000);
+    return creation > twentySecondsAgo;
+  }, [song?.createdAt]);
+
   return (
     <div className="w-full flex justify-center md:mt-6">
       <div className="relative w-full md:w-[550px] flex-col justify-center">
@@ -75,7 +82,7 @@ export default function SongDetailsPage() {
           <button
             className="block p-2 md:absolute md:-translate-x-14 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg"
             aria-label="Songs"
-            onClick={() => navigate(-1)}
+            onClick={() => (wasJustCreated ? navigate("/songs") : navigate(-1))}
           >
             <BsArrowLeft size={24} />
             <span className="sr-only">Back to Songs</span>

@@ -153,12 +153,14 @@ export default function SongsPage() {
             aria-label="Search songs"
             type="search"
             placeholder="Search"
-            className="border-none outline-none p-2"
+            className={`border-none outline-none p-2 bg-white dark:bg-[revert] w- ${
+              search ? "w-[192px]" : "w-[232px]"
+            }`}
           />
           <button
             type="button"
             aria-label="clear"
-            className={`p-2 md:p-1 md:m-1 ${search ? "" : "invisible"}`}
+            className={`p-2 md:p-1 md:m-1 ${search ? "" : "hidden"}`}
             onClick={handleClear}
           >
             <MdOutlineClear
@@ -169,7 +171,6 @@ export default function SongsPage() {
           </button>
         </Form>
         <div className="md:hidden flex ml-auto items-center gap-1">
-          <div>{filteredSongItems.length} </div>
           {user?.isAdmin ? (
             <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
           ) : null}

@@ -9,7 +9,7 @@ export default function LoginMenu() {
 
   return user ? (
     <Ariakit.MenuProvider>
-      <Ariakit.MenuButton className="items-center justify-center w-11 ml-auto md:h-[revert] md:w-[revert] flex">
+      <Ariakit.MenuButton className="items-center justify-center w-11 ml-auto md:h-[revert] md:w-[revert] flex dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg p-2">
         <span className="md:hidden">
           <AiOutlineMenu size={24} />
         </span>

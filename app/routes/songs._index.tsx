@@ -153,7 +153,7 @@ export default function SongsPage() {
             aria-label="Search songs"
             type="search"
             placeholder="Search"
-            className={`border-none outline-none p-2 bg-white dark:bg-[revert] w- ${
+            className={`border-none outline-none p-2 bg-white dark:bg-slate-700 w- ${
               search ? "w-[192px]" : "w-[232px]"
             }`}
           />

@@ -92,22 +92,20 @@ export async function markSongPlaybackEvent({
   songId: Song["id"];
   userId?: User["id"];
 }) {
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
+  const tenMinutesAgo = new Date();
+  tenMinutesAgo.setMinutes(tenMinutesAgo.getMinutes() - 10);
 
-  const playbackToday = await prisma.playbackEvent.findFirst({
+  const songPlayedInLastTenMinutes = await prisma.playbackEvent.findFirst({
     where: {
       songId,
       createdAt: {
-        gte: todayStart,
-        lte: todayEnd,
+        gte: tenMinutesAgo,
+        lte: new Date(),
       },
     },
   });
 
-  if (playbackToday) {
+  if (songPlayedInLastTenMinutes) {
     return { alreadyMarked: true };
   }
 

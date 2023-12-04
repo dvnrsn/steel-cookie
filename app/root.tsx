@@ -9,12 +9,12 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useNavigation,
 } from "@remix-run/react";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
 
 import stylesheet from "~/tailwind.css";
 
+import { GlobalLoadingBar } from "./components/global-loading-bar";
 import { honeypot } from "./honeypot.server";
 import { authenticator } from "./session.server";
 
@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { honeypotInputProps } = useLoaderData<typeof loader>();
-  const navigation = useNavigation();
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -42,15 +42,10 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <div
-          className={`h-full ${
-            navigation.state === "loading" ? "loading" : ""
-          }`}
-        >
-          <HoneypotProvider {...honeypotInputProps}>
-            <Outlet />
-          </HoneypotProvider>
-        </div>
+        <GlobalLoadingBar />
+        <HoneypotProvider {...honeypotInputProps}>
+          <Outlet />
+        </HoneypotProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

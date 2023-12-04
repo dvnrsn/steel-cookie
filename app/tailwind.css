@@ -99,9 +99,3 @@ input[type="search"]::-webkit-search-results-decoration {
   transform-origin: bottom left;
   animation-delay: 0.5s;
 }
-
-.loading {
-  opacity: 0.25;
-  transition: opacity 200ms;
-  transition-delay: 200ms;
-}

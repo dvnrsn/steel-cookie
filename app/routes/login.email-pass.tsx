@@ -6,7 +6,6 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { SocialsProvider } from "remix-auth-socials";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
 
@@ -31,7 +30,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     honeypot.check(formData);
   } catch (error) {
-    console.log("error", error);
     if (error instanceof SpamError) {
       return json({ errors: { email: null, password: null } }, { status: 400 });
     }
@@ -68,7 +66,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  const user = await authenticator.authenticate("user-pass", request, {
+  const user = await authenticator.authenticate("email-pass", request, {
     failureRedirect: "/join",
     context: { formData },
   });
@@ -88,7 +86,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const meta: MetaFunction = () => [{ title: "Login" }];
 
-export default function LoginPage() {
+export default function LoginEmailPassPage() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/songs";
   const actionData = useActionData<typeof action>();
@@ -198,15 +196,6 @@ export default function LoginPage() {
               </Link>
             </div>
           </div>
-        </Form>
-        <Form
-          action={`/auth/${SocialsProvider.FACEBOOK}`}
-          method="post"
-          className="mt-8"
-        >
-          <button className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-800">
-            Login with Facebook
-          </button>
         </Form>
       </div>
     </div>

@@ -26,6 +26,7 @@ model User {
   updatedSongs      Song[]              @relation(name: "UpdatedBy")
   AnalyticsSongView AnalyticsSongView[]
   PlaybackEvent     PlaybackEvent[]
+  lastLogin         DateTime?
 }
 
 model Password {

@@ -30,25 +30,39 @@ export async function createUser(email: User["email"], password: string) {
   });
 }
 
-export async function findOrCreateUser(
-  email: User["email"],
-  password?: string,
-) {
+export async function findOrCreateUser({
+  email,
+  password,
+  name,
+}: {
+  email: User["email"];
+  password?: string;
+  name?: string;
+}) {
   invariant(email, "Email is required");
   const user = await prisma.user.findUnique({ where: { email } });
   if (user) {
     return user;
   }
-  invariant(password, "Password is required");
-  const hashedPassword = await bcrypt.hash(password, 10);
+  if (password) {
+    password = await bcrypt.hash(password, 10);
+  }
+  const [firstName, lastName] = name?.split(" ") ?? [];
   return prisma.user.create({
     data: {
       email,
-      password: {
-        create: {
-          hash: hashedPassword,
-        },
-      },
+      authProvider: password ? "email-pass" : "email-link",
+      ...(password
+        ? {
+            password: {
+              create: {
+                hash: password,
+              },
+            },
+          }
+        : {}),
+      ...(firstName ? { firstName } : {}),
+      ...(lastName ? { lastName } : {}),
     },
   });
 }
@@ -130,4 +144,13 @@ export async function verifySocialLogin(
     return null;
   }
   return user;
+}
+
+export async function markLastLogin(id: User["id"]) {
+  return prisma.user.update({
+    where: { id },
+    data: {
+      lastLogin: new Date(),
+    },
+  });
 }

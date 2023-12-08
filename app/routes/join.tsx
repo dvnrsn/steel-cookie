@@ -70,7 +70,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  return await authenticator.authenticate("user-pass", request, {
+  return await authenticator.authenticate("email-pass", request, {
     successRedirect: redirectTo,
     failureRedirect: "/join",
     context: { formData },

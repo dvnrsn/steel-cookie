@@ -28,7 +28,7 @@ async function createAndLogin(email: string) {
   formData.append("email", email);
   formData.append("password", "myreallystrongpassword");
 
-  await authenticator.authenticate("user-pass", new Request("test://test"), {
+  await authenticator.authenticate("email-pass", new Request("test://test"), {
     failureRedirect: "/join",
     context: { formData },
   });

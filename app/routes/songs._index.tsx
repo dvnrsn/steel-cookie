@@ -14,11 +14,14 @@ import FilterMenu from "~/components/filter-menu";
 import LoginMenu from "~/components/login-menu";
 import MobileSongList from "~/components/mobile-song-list";
 import { getSongListItems } from "~/models/song.server";
+import { getSongsByTag, getTags } from "~/models/tags.server";
 import { useOptionalUser } from "~/utils";
 
 export const loader = async () => {
   const songListItems = await getSongListItems();
-  return json({ songListItems });
+  const tagsData = await getTags();
+  const songsByTag = await getSongsByTag();
+  return json({ songListItems, tagsData, songsByTag });
 };
 
 // don't revalidate because we don't want to refetch the song list
@@ -26,7 +29,8 @@ export const loader = async () => {
 export const shouldRevalidate = () => false;
 
 export default function SongsPage() {
-  const { songListItems } = useLoaderData<typeof loader>();
+  const { songListItems, tagsData, songsByTag } =
+    useLoaderData<typeof loader>();
   const user = useOptionalUser();
   const inputRef = useRef<HTMLInputElement>(null);
   const theadRef = useRef<HTMLTableSectionElement>(null);
@@ -35,6 +39,7 @@ export default function SongsPage() {
   const [incomplete, setIncomplete] = useState(
     searchParams.get("filter") === "incomplete",
   );
+  const [tags, setTags] = useState(searchParams.get("tags")?.split(",") ?? []);
   const submit = useSubmit();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutDebounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -84,10 +89,12 @@ export default function SongsPage() {
     incompleteArg,
     searchArg,
     debounce = false,
+    tagName = "",
   }: {
     incompleteArg?: boolean;
     searchArg?: string;
     debounce?: boolean;
+    tagName?: string;
   } = {}) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (timeoutDebounceRef.current) clearTimeout(timeoutDebounceRef.current);
@@ -104,6 +111,21 @@ export default function SongsPage() {
     }
     if (filter) {
       formData.set("filter", "incomplete");
+    }
+    if (typeof incompleteArg === "boolean") {
+      setIncomplete(incompleteArg);
+    }
+    if (tagName) {
+      if (tags.includes(tagName)) {
+        setTags((prev) => prev.filter((tag) => tag !== tagName));
+        if (tags.filter((tag) => tag !== tagName).length > 0)
+          formData.set("tags", tags.filter((tag) => tag !== tagName).join(","));
+      } else {
+        setTags((prev) => [...prev, tagName]);
+        formData.set("tags", [...tags, tagName].join(","));
+      }
+    } else if (searchParams.get("tags")) {
+      formData.set("tags", searchParams.get("tags") || "");
     }
     if (debounce) {
       debouncingRef.current = true;
@@ -130,6 +152,10 @@ export default function SongsPage() {
     if (incompleteFilter) {
       list = songListItems.filter((song) => !song.danceInstructionsLink);
     }
+    if (tags.length > 0) {
+      const songIds = tags.map((tag) => songsByTag[tag]).flat();
+      list = list.filter((song) => songIds.includes(song.id));
+    }
     if (!search) return list;
     const fuseOptions = {
       threshold: 0.35,
@@ -137,7 +163,7 @@ export default function SongsPage() {
     };
     const fuse = new Fuse(list, fuseOptions);
     return fuse.search(search).map((result) => result.item);
-  }, [songListItems, search, incompleteFilter]);
+  }, [songListItems, search, incompleteFilter, tags, songsByTag]);
 
   return (
     <>
@@ -172,13 +198,13 @@ export default function SongsPage() {
         </Form>
         <div className="md:hidden flex ml-auto items-center gap-1">
           {user?.isAdmin ? (
-            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+            <FilterMenu {...{ incomplete, handleSubmit, tagsData, tags }} />
           ) : null}
           <LoginMenu />
         </div>
         <div className="md:flex ml-2 hidden items-center">
           {user?.isAdmin ? (
-            <FilterMenu {...{ incomplete, setIncomplete, handleSubmit }} />
+            <FilterMenu {...{ incomplete, handleSubmit, tagsData, tags }} />
           ) : null}
         </div>
         <div className="hidden w-20 md:flex justify-end">

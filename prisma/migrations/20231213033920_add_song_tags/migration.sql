@@ -18,4 +18,4 @@ CREATE TABLE "Tag" (
 CREATE UNIQUE INDEX "Tag_name_key" ON "Tag"("name");
 
 -- InsertData
-INSERT INTO "Tag" ("name") VALUES ("Wednesday Lessons"), ("Friday Lessons"), ("Early Evening"), ("Late Evening")
+INSERT INTO "Tag" ("name") VALUES ("Wednesday Lessons"), ("Friday Lessons"), ("Early Night"), ("Late Night")

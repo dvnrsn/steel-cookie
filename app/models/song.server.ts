@@ -23,6 +23,12 @@ export function getSong({
     wallCounts: true,
     startingWeightFoot: true,
 
+    tags: {
+      select: {
+        tag: true,
+      },
+    },
+
     ...(userId
       ? {
           createdAt: true,
@@ -59,11 +65,26 @@ type RequiredSongField = Pick<Song, "title" | "artist">;
 export function editSong(
   songId: Song["id"],
   userId: User["id"],
-  songData: NullableSongFields & RequiredSongField,
+  songData: NullableSongFields & RequiredSongField & { tags?: string[] },
 ) {
+  let tags = {};
+  if (songData.tags) {
+    // avoid deleting and reinserting tags all the time, only if they changed.
+    // also the nested ternary freaks out prisma TS for some reason
+    tags = {
+      deleteMany: {},
+      create: songData.tags?.map((tag) => ({
+        tag: { connect: { id: parseInt(tag) } },
+      })),
+    };
+  }
   return prisma.song.update({
     where: { id: songId },
-    data: { ...songData, updatedById: userId },
+    data: {
+      ...songData,
+      updatedById: userId,
+      tags,
+    },
   });
 }
 

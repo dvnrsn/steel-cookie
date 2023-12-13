@@ -12,6 +12,7 @@ import invariant from "tiny-invariant";
 import { z } from "zod";
 
 import { deleteSong, editSong, getSong } from "~/models/song.server";
+import { getTags } from "~/models/tags.server";
 import { requireAdmin } from "~/session.server";
 
 const schema = z.object({
@@ -26,6 +27,7 @@ const schema = z.object({
   danceCounts: z.coerce.number().optional(),
   wallCounts: z.coerce.number().optional(),
   startingWeightFoot: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export const action = async ({ request, params }: LoaderFunctionArgs) => {
@@ -33,14 +35,28 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const user = await requireAdmin(request);
   const formData = await request.formData();
 
-  const { _action, ...payload } = Object.fromEntries(formData);
+  const { _action, tag, originalTags, ...payload } =
+    Object.fromEntries(formData);
 
   if (_action === "delete") {
     await deleteSong({ id: parseInt(params.songId) });
     return redirect("/songs");
   }
 
+  const tags = formData.getAll("tag");
+
+  payload["tags"] = tags as unknown as FormDataEntryValue;
+
   const result = schema.safeParse(payload);
+
+  if (typeof originalTags !== "string") {
+    return json({
+      payload,
+      error: { originalTags: "originalTags must be a string" },
+    });
+  }
+
+  const originalTagsArr = originalTags.split(", ");
 
   if (!result.success) {
     return json({
@@ -48,6 +64,11 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
       error: result.error.flatten().fieldErrors,
     });
   }
+
+  if (originalTagsArr.sort().join(",") === tags.sort().join(",")) {
+    delete result.data.tags;
+  }
+
   const song = await editSong(parseInt(params.songId), user.id, result.data);
   return redirect("/songs/" + song.id);
 };
@@ -62,7 +83,16 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (!song) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ song });
+  const unfilteredTags = await getTags();
+  const tags = unfilteredTags.filter((tag) =>
+    [
+      "Wednesday Lessons",
+      "Friday Lessons",
+      "Early Night",
+      "Late Night",
+    ].includes(tag.name),
+  );
+  return json({ song, tags });
 };
 
 export default function SongEditPage() {
@@ -71,7 +101,7 @@ export default function SongEditPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const { song } = data;
+  const { song, tags } = data;
   return (
     <div className="max-w-[800px] mx-auto">
       <Form method="post">
@@ -208,6 +238,61 @@ export default function SongEditPage() {
               id="startingWeightFoot"
               name="startingWeightFoot"
               defaultValue={song.startingWeightFoot || ""}
+            />
+          </div>
+          <div className="flex flex-col justify-around">
+            <label className="cursor-pointer py-2 md:py-0">
+              <input
+                type="checkbox"
+                name="tag"
+                value={tags.find((tag) => tag.name === "Wednesday Lessons")?.id}
+                defaultChecked={song.tags?.some(
+                  (tag) => tag.tag.name === "Wednesday Lessons",
+                )}
+              />{" "}
+              Wednesday Lessons
+            </label>
+            <label className="cursor-pointer py-2 md:py-0">
+              <input
+                type="checkbox"
+                name="tag"
+                value={tags.find((tag) => tag.name === "Friday Lessons")?.id}
+                defaultChecked={song.tags?.some(
+                  (tag) => tag.tag.name === "Friday Lessons",
+                )}
+              />{" "}
+              Friday Lessons
+            </label>
+          </div>
+          <div className="flex gap-8">
+            <label className="cursor-pointer py-2 md:py-0">
+              <input
+                type="checkbox"
+                name="tag"
+                value={tags.find((tag) => tag.name === "Early Night")?.id}
+                defaultChecked={song.tags?.some(
+                  (tag) => tag.tag.name === "Early Night",
+                )}
+              />{" "}
+              Early Night
+            </label>
+            <label className="cursor-pointer py-2 md:py-0">
+              <input
+                type="checkbox"
+                name="tag"
+                value={tags.find((tag) => tag.name === "Late Night")?.id}
+                defaultChecked={song.tags?.some(
+                  (tag) => tag.tag.name === "Late Night",
+                )}
+              />{" "}
+              Late Night
+            </label>
+            <input
+              type="text"
+              name="originalTags"
+              defaultValue={song.tags?.map((tag) => tag.tag.id).join(", ")}
+              readOnly
+              className="hidden"
             />
           </div>
         </div>

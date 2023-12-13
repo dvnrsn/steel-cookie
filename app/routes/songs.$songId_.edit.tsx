@@ -83,15 +83,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (!song) {
     throw new Response("Not Found", { status: 404 });
   }
-  const unfilteredTags = await getTags();
-  const tags = unfilteredTags.filter((tag) =>
-    [
-      "Wednesday Lessons",
-      "Friday Lessons",
-      "Early Night",
-      "Late Night",
-    ].includes(tag.name),
-  );
+  const tags = await getTags();
   return json({ song, tags });
 };
 

@@ -61,6 +61,24 @@ model Song {
   updatedById       String?
   AnalyticsSongView AnalyticsSongView[]
   PlaybackEvent     PlaybackEvent[]
+  tags              SongTag[]
+}
+
+model SongTag {
+  song   Song @relation(fields: [songId], references: [id])
+  songId Int
+
+  tag   Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+
+  @@id([songId, tagId])
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  songs SongTag[]
 }
 
 model PlaybackEvent {

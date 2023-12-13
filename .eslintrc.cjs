@@ -85,6 +85,10 @@ module.exports = {
             "newlines-between": "always",
           },
         ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { ignoreRestSiblings: true },
+        ],
       },
     },
 

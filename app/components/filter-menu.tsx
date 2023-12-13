@@ -3,6 +3,8 @@ import { Tag } from "@prisma/client";
 import { useRef } from "react";
 import { FiFilter } from "react-icons/fi/index.js";
 
+import { useOptionalUser } from "~/utils";
+
 export default function FilterMenu({
   incomplete,
   handleSubmit,
@@ -21,6 +23,7 @@ export default function FilterMenu({
   tags: string[];
 }) {
   const filterRef = useRef<HTMLInputElement>(null);
+  const user = useOptionalUser();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,19 +51,22 @@ export default function FilterMenu({
         gutter={8}
         className="bg-white dark:bg-slate-800 z-10 relative p-2 rounded-lg border-slate-100 border shadow-md"
       >
-        <Ariakit.MenuItem onClick={handleClick}>
-          <label className="w-full h-full menu-item text-left rounded flex items-center">
-            <input
-              ref={filterRef}
-              type="checkbox"
-              name="filter"
-              checked={incomplete}
-              onChange={() => undefined}
-              className="mr-2 cursor-pointer"
-            />
-            Incomplete
-          </label>
-        </Ariakit.MenuItem>
+        {user ? (
+          <Ariakit.MenuItem onClick={handleClick}>
+            <label className="w-full h-full menu-item text-left rounded flex items-center">
+              <input
+                ref={filterRef}
+                type="checkbox"
+                name="filter"
+                checked={incomplete}
+                onChange={() => undefined}
+                className="mr-2 cursor-pointer"
+              />
+              Incomplete
+            </label>
+          </Ariakit.MenuItem>
+        ) : null}
+
         {tagsData?.map((tag) => (
           <Ariakit.MenuItem
             key={tag.id}

@@ -197,15 +197,11 @@ export default function SongsPage() {
           </button>
         </Form>
         <div className="md:hidden flex ml-auto items-center gap-1">
-          {user?.isAdmin ? (
-            <FilterMenu {...{ incomplete, handleSubmit, tagsData, tags }} />
-          ) : null}
+          <FilterMenu {...{ incomplete, handleSubmit, tagsData, tags }} />
           <LoginMenu />
         </div>
         <div className="md:flex ml-2 hidden items-center">
-          {user?.isAdmin ? (
-            <FilterMenu {...{ incomplete, handleSubmit, tagsData, tags }} />
-          ) : null}
+          <FilterMenu {...{ incomplete, handleSubmit, tagsData, tags }} />
         </div>
         <div className="hidden w-20 md:flex justify-end">
           {filteredSongItems.length} songs

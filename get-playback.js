@@ -1,8 +1,6 @@
 import sqlite3Lib from "sqlite3";
 import { createObjectCsvWriter } from "csv-writer";
 
-//test
-
 const sqlite3 = sqlite3Lib.verbose();
 
 // Open the database

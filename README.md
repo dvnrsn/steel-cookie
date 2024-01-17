@@ -8,6 +8,37 @@ inspired by [Max's Iron Cookie](https://www.ironcookie.com)
 
 Built on the [indie stack](https://github.com/remix-run/indie-stack)
 
+## How to get playback data in CSV
+
+There is a manual recording of playback events which marks when a song is played at bar. Here is how we get that data into CSV
+
+```bash
+node playbackEvent-to-csv.js
+```
+
+| PLAYBACK TIME | TITLE                | FIRST NAME | LAST NAME |
+| ------------- | -------------------- | ---------- | --------- |
+| 1700362160500 | Everything She Ain't | Devin      | Rasmussen |
+| 1700365249728 | Humble               | Devin      | Rasmussen |
+
+Maybe we want to get the highest count
+
+```sql
+SELECT COUNT(p.id), s.title
+FROM "PlaybackEvent" p
+JOIN "Song" s ON p.songId = s.id
+GROUP BY p.songId
+ORDER BY COUNT(p.id) DESC;
+```
+
+| RANK | TITLE                 |
+| ---- | --------------------- |
+| 5    | Wobble                |
+| 4    | Burn it to the Ground |
+| 4    | Fire Burning          |
+| 4    | Shivers               |
+| 4    | I See Country         |
+
 ## What's in the stack?
 
 - [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/)
